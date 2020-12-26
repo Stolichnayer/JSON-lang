@@ -1,10 +1,27 @@
-// JSONLang.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+#include "JSONlang.h"
 
-#include <iostream>
 
-int main()
-{
-    std::cout << "Hello World!\n";
-}
+PROGRAM_BEGIN
 
+NUMBER(2);
+
+
+std::cout << STRING("ela re") << std::endl;
+
+
+
+
+
+
+
+/*
+JSON(test) = TRUE
+JSON(emptyObj) = OBJECT {}
+JSON(book) = OBJECT {  ........  }
+JSON(week_temperatures) = ARRAY
+JSON(week_temperatures) = ARRAY [ ... ]
+
+
+*/
+
+PROGRAM_END
