@@ -1,27 +1,17 @@
 #include "JSONlang.h"
+#include <algorithm>
+
 
 
 PROGRAM_BEGIN
 
-NUMBER(2);
 
 
-std::cout << STRING("ela re") << std::endl;
-
-
+auto myObject = Object { new Key("myKey1"), new String("myValue1"), new Key("myKey2"), new String("myValue2") };
 
 
 
 
 
-/*
-JSON(test) = TRUE
-JSON(emptyObj) = OBJECT {}
-JSON(book) = OBJECT {  ........  }
-JSON(week_temperatures) = ARRAY
-JSON(week_temperatures) = ARRAY [ ... ]
-
-
-*/
 
 PROGRAM_END

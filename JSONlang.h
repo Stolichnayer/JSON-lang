@@ -1,8 +1,7 @@
-#include <iostream>
-#include <string>
+#include "JSONlang_data.h"
 
-#define PROGRAM_BEGIN int main() {
-#define PROGRAM_END	  ;}
+#define PROGRAM_BEGIN   int main() {
+#define PROGRAM_END	    ;}
 
 #define JSON(name) auto name
 
@@ -11,18 +10,6 @@
 #define STRING			std::string
 #define TRUE			true
 #define FALSE			false
-
-
-#define OBJECT (test)
-
-
-
-class Object
-{
-	int x; int y;
-public:
-	Object() {
-		x = 0; y = 0;
-	}
-};
-
+#define OBJECT			Object
+// Stringify
+#define KEY(text)		std::string(#text)
