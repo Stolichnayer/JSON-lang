@@ -14,7 +14,10 @@ private:
     std::string _data;
 public:
     Key(std::string data) : _data(data) {}
-    virtual std::string ToString() const override { return _data; }
+    virtual std::string ToString() const override
+    {
+        return "\"" + _data + "\""; 
+    }
 };
 
 class Value : public Printable
@@ -66,8 +69,44 @@ public:
     }
 };
 
+class Number : public Value
+{
+private:
+    double _data;
+public:
+    Number(double data) : _data(data) {}
+    virtual std::string ToString() const override
+    {
+        double intpart;
+        if (std::modf(_data, &intpart) == 0.0)
+        {
+            return std::to_string((int)_data);
+        }
+        else 
+        {
+            std::string str = std::to_string(_data);
+            str.erase(str.find_last_not_of('0') + 1, std::string::npos); // Remove Trailing Zeros from double
+            return str;
+        }            
+    }
+};
 
+class Boolean : public Value
+{
+private:
+    bool _data;
+public:
+    Boolean(bool data) : _data(data) {}
+    virtual std::string ToString() const override { return _data? "true" : "false"; }
+};
 
+class Null : public Value
+{
+private:
+    std::string _data = "null";
+public:
+    virtual std::string ToString() const override { return _data; }
+};
 
 
 // Operator Overloads
