@@ -7,9 +7,9 @@ PROGRAM_BEGIN
 
 
 
-auto myObject = Object { new Key("myKey1"), new String("myValue1"), new Key("myKey2"), new String("myValue2") };
+auto myObject = new Object { new Key("myKey1"), new String("myValue1"), new Key("myKey2"), new String("myValue2") };
 
-
+std::cout << myObject << myObject << std::endl;
 
 
 

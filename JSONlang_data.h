@@ -40,15 +40,29 @@ public:
     {
         for (auto itr = data.begin(); itr != data.end(); ++itr) 
         {
-            //_data.emplace(, (Value *)std::next(itr, 1));
-            //_data.emplace("xaxa" , new String("xaxa"));
-            std::cout << (*itr)->ToString() << ", " << (*std::next(itr, 1))->ToString() << std::endl;
+            _data.emplace((*itr)->ToString(), dynamic_cast<Value*> (*std::next(itr, 1)));
             ++itr;
         }
     }
     virtual std::string ToString() const override 
     {  
-        return "nulllll";
+        std::string str = "{ ";
+        
+        for (auto itr = _data.begin(); itr != _data.end(); ++itr)
+        {
+            str.append(itr->first);
+            str.append(" : ");
+            str.append((itr->second)->ToString());
+
+            if((++itr) != _data.end())
+                str.append(", ");
+
+            --itr;
+        }        
+
+        str.append(" }");
+
+        return str;
     }
 };
 
@@ -59,11 +73,12 @@ public:
 // Operator Overloads
 std::ostream& operator<<(std::ostream& os, Value * val)
 {
+    os << val->ToString();
+    return os;
+}
 
-    os << "{ ";
-
-
-    os << " }";
-
+std::ostream& operator<<(Value* val, std::ostream& os)
+{
+    os << val->ToString();
     return os;
 }
