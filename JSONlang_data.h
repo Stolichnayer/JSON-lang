@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 
 class Printable
 {
@@ -22,6 +23,17 @@ public:
 
 class Value : public Printable
 {
+public:
+    virtual std::string ToString() const override
+    {
+        return "Value class";
+    }
+
+    std::string operator,(Value* v2)
+    {
+        std::cout << "operator,";
+        return std::string("gamw");
+    }
 
 };
 
@@ -31,7 +43,10 @@ private:
     std::string _data;
 public:
     String(std::string data) : _data(data) {}
-    virtual std::string ToString() const override { return _data; }
+    virtual std::string ToString() const override 
+    { 
+        return "\"" + _data + "\"";
+    }
 };
 
 class Object : public Value
@@ -97,7 +112,10 @@ private:
     bool _data;
 public:
     Boolean(bool data) : _data(data) {}
-    virtual std::string ToString() const override { return _data? "true" : "false"; }
+    virtual std::string ToString() const override 
+    { 
+        return _data? "true" : "false"; 
+    }
 };
 
 class Null : public Value
@@ -105,8 +123,52 @@ class Null : public Value
 private:
     std::string _data = "null";
 public:
-    virtual std::string ToString() const override { return _data; }
+    virtual std::string ToString() const override 
+    { 
+        return _data; 
+    }
 };
+
+
+class Array : public Value
+{
+public:
+    std::vector<int> _data;
+public:
+    Array() {}
+    Array(std::initializer_list<int> data)
+    {
+        _data = data;
+    }
+
+    virtual std::string ToString() const override
+    {
+        return "";
+    }
+
+
+    int operator[](int index)
+    {
+        if (index >= _data.size()) {
+            std::cout << "Error: Array index out of bound.";
+            exit(0);
+        }
+        return _data[index];
+    }
+
+    void operator[](std::string str)
+    {
+        std::cout << "NAI re string";
+    }
+
+
+    
+
+};
+
+
+
+
 
 
 // Operator Overloads
@@ -121,3 +183,12 @@ std::ostream& operator<<(Value* val, std::ostream& os)
     os << val->ToString();
     return os;
 }
+
+/*
+std::string operator,(Value& v1, Value& v2)
+{
+    std::cout << "operator,";
+    return std::string("gamw");
+}
+
+*/
