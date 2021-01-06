@@ -42,6 +42,12 @@ public:
     {
         return "Value class";
     }
+    
+    virtual std::string GetClassName() const
+    {
+        return "value";
+    }
+    
 };
 
 class String : public Value
@@ -63,6 +69,11 @@ public:
     std::string GetData()
     {
         return _data;
+    }
+    
+    std::string GetClassName() const override
+    {
+        return "string";
     }
 };
 
@@ -115,6 +126,11 @@ public:
         return str;
     }
 
+    std::string GetClassName() const override
+    {
+        return "object";
+    }
+
     std::map<std::string, std::reference_wrapper<Printable>>& GetData()
     {
         return _data;
@@ -146,6 +162,11 @@ public:
             return str;
         }
     }
+
+    std::string GetClassName() const override
+    {
+        return "number";
+    }
 };
 
 class Boolean : public Value
@@ -163,6 +184,11 @@ public:
     {
         return _data ? "true" : "false";
     }
+
+    std::string GetClassName() const override
+    {
+        return "boolean";
+    }
 };
 
 class Null : public Value
@@ -178,6 +204,11 @@ public:
     virtual std::string ToString() const override
     {
         return _data;
+    }
+
+    std::string GetClassName() const override
+    {
+        return "null";
     }
 };
 
@@ -208,6 +239,11 @@ public:
         str.append(" ]");
 
         return str;
+    }
+
+    std::string GetClassName() const override
+    {
+        return "array";
     }
 
     std::vector<Value*> GetData()
@@ -328,3 +364,17 @@ bool HAS_KEY(Value& val, std::string key)
 
     return false;        
 }
+
+std::string TYPE_OF(Value& val)
+{
+    return val.GetClassName();
+}
+
+/*    std::string typeName = typeid(val).name();
+
+    typeName = typeName.substr(6);
+
+    std::transform(typeName.begin(), typeName.end(), typeName.begin(),
+        [](unsigned char c) { return std::tolower(c); });
+
+    return typeName;*/
