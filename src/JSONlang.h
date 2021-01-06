@@ -1,11 +1,4 @@
-#include <iostream>
-#include <string>
-#include <map>
-#include <vector>
-#include <algorithm>
-#include <typeinfo>
-
-#include "JSONlang_data.h"
+#include "JSONdata.h"
 
 #define PROGRAM_BEGIN   int main() { 
 #define PROGRAM_END	    ;}

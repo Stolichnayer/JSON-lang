@@ -39,12 +39,12 @@ JSON(students) = ARRAY[
 JSON(t) = NUMBER(66)
 JSON(t1) = NUMBER(55)
 
-/*
+
 PRINT emptyObj
 PRINT emptyArray
 PRINT book
 PRINT week_temperatures
-PRINT students*/
+PRINT students
 
 //PRINT t, t1
 
@@ -56,9 +56,10 @@ PRINT SIZE_OF(book);
 PRINT SIZE_OF(week_temperatures);
 PRINT SIZE_OF(t);
 
-PRINT IS_EMPTY(OBJECT{});
+PRINT IS_EMPTY(OBJECT{});/**/
 
-
+PRINT book
+PRINT HAS_KEY(book, "author")
 
 PROGRAM_END
 

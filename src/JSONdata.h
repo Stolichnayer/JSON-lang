@@ -1,7 +1,14 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <typeinfo>
+
 class Printable
 {
 public:
-    virtual std::string ToString() const 
+    virtual std::string ToString() const
     {
         return "Printable class";
     };
@@ -16,7 +23,12 @@ public:
 
     virtual std::string ToString() const override
     {
-        return "\"" + _data + "\""; 
+        return "\"" + _data + "\"";
+    }
+
+    std::string GetData()
+    {
+        return _data;
     }
 };
 
@@ -24,7 +36,7 @@ class Value : public Printable
 {
 public:
     // This is needed to initialize arrays with the overloaded comma operator
-    std::vector<Value*> _data; 
+    std::vector<Value*> _data;
 
     virtual std::string ToString() const override
     {
@@ -43,62 +55,69 @@ public:
         Value::_data.push_back(this);
     }
 
-    virtual std::string ToString() const override 
-    { 
+    virtual std::string ToString() const override
+    {
         return "\"" + _data + "\"";
+    }
+
+    std::string GetData()
+    {
+        return _data;
     }
 };
 
 class Object : public Value
 {
 public:
-    std::map< std::string, std::reference_wrapper<Printable> > _data;
-    //std::map< std::string, Printable* > _data;
+    std::map<std::string, std::reference_wrapper<Printable>> _data;
 public:
-    /*
-    Object(std::initializer_list<Printable*> data)
-    {
-        for (auto itr = data.begin(); itr != data.end(); ++itr) 
-        {
-            //_data.emplace((*itr)->ToString(), dynamic_cast<Value*> (*std::next(itr, 1)));
-            //++itr;
-        }
-    }    */
-    
     Object(std::initializer_list<std::reference_wrapper<Printable>> data)
     {
         Value::_data.push_back(this);
 
         for (auto itr = data.begin(); itr != data.end(); ++itr)
         {
-            _data.emplace(  (itr)->get().ToString(),   *std::next(itr, 1)  );                       
+            Key* key = dynamic_cast<Key*> (&(itr->get()));
+            if(key)
+                _data.emplace(key->GetData(), *std::next(itr, 1));
+            else
+            {
+                std::cout << "Error: Wrong Object format (Must be key, value).\n";
+                exit(1);
+            }
+                
             ++itr;
         }
 
     }
 
-    virtual std::string ToString() const override 
-    {  
+    virtual std::string ToString() const override
+    {
         if (_data.size() == 0)
             return "{}";
 
         std::string str = "{ ";
-        
+
         for (auto itr = _data.begin(); itr != _data.end(); ++itr)
         {
             str.append(itr->first);
             str.append(" : ");
             str.append((itr->second).get().ToString());
 
-            if((++itr) != _data.end())
+            if ((++itr) != _data.end())
                 str.append(", ");
 
             --itr;
-        }        
+        }
 
         str.append(" }");
 
         return str;
+    }
+
+    std::map<std::string, std::reference_wrapper<Printable>>& GetData()
+    {
+        return _data;
     }
 };
 
@@ -120,12 +139,12 @@ public:
         {
             return std::to_string((int)_data);
         }
-        else 
+        else
         {
             std::string str = std::to_string(_data);
             str.erase(str.find_last_not_of('0') + 1, std::string::npos); // Remove Trailing Zeros from double
             return str;
-        }            
+        }
     }
 };
 
@@ -134,15 +153,15 @@ class Boolean : public Value
 private:
     bool _data;
 public:
-    Boolean(bool data) 
+    Boolean(bool data)
     {
         _data = data;
         Value::_data.push_back(this);
     }
 
-    virtual std::string ToString() const override 
-    { 
-        return _data? "true" : "false"; 
+    virtual std::string ToString() const override
+    {
+        return _data ? "true" : "false";
     }
 };
 
@@ -152,13 +171,13 @@ private:
     std::string _data = "null";
 public:
     Null()
-    {        
+    {
         Value::_data.push_back(this);
     }
 
-    virtual std::string ToString() const override 
-    { 
-        return _data; 
+    virtual std::string ToString() const override
+    {
+        return _data;
     }
 };
 
@@ -168,7 +187,7 @@ class Array : public Value
 public:
     std::vector<Value*> _data;
 public:
-    Array() 
+    Array()
     {
         Value::_data.push_back(this);
     }
@@ -180,15 +199,20 @@ public:
 
         std::string str = "[ ";
         for (auto v : _data)
-        {            
+        {
             str.append(v->ToString());
 
             if (v != _data[_data.size() - 1])
-                str.append(", ");            
+                str.append(", ");
         }
         str.append(" ]");
 
         return str;
+    }
+
+    std::vector<Value*> GetData()
+    {
+        return _data;
     }
 
     Value* operator[](int index)
@@ -236,7 +260,7 @@ Value& operator,(Value& val1, Value& val2)
     return val1;
 }
 
-std::ostream& operator,( std::ostream& os, Value& val)
+std::ostream& operator,(std::ostream& os, Value& val)
 {
     os << val.ToString() << std::endl;
     return os;
@@ -250,7 +274,7 @@ std::ostream& operator,(std::ostream& os, int var)
 
 std::ostream& operator,(std::ostream& os, bool var)
 {
-    if(var)
+    if (var)
         os << "true" << std::endl;
     else
         os << "false" << std::endl;
@@ -268,12 +292,12 @@ int SIZE_OF(Value& val)
 {
     Object* obj = dynamic_cast<Object*>(&val);
     if (obj)
-        return obj->_data.size();
-    
+        return obj->GetData().size();
+
     Array* arr = dynamic_cast<Array*>(&val);
-    if (arr)    
-        return arr->_data.size();
-    
+    if (arr)
+        return arr->GetData().size();
+
     return 1;
 }
 
@@ -281,12 +305,26 @@ bool IS_EMPTY(Value& val)
 {
     Object* obj = dynamic_cast<Object*>(&val);
     if (obj)
-        return (obj->_data.size() == 0);        
-       
+        return (obj->GetData().size() == 0);
 
     Array* arr = dynamic_cast<Array*>(&val);
     if (arr)
-        return (arr->_data.size() == 0);
+        return (arr->GetData().size() == 0);
 
     return false;
+}
+
+bool HAS_KEY(Value& val, std::string key)
+{
+    Object* obj = dynamic_cast<Object*>(&val);
+    if (obj)
+    {
+        for (const auto& i : obj->GetData())
+        {
+            if (i.first == key)
+                return true;
+        }
+    }
+
+    return false;        
 }
