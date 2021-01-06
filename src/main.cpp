@@ -56,7 +56,7 @@ PRINT SIZE_OF(book);
 PRINT SIZE_OF(week_temperatures);
 PRINT SIZE_OF(t);
 
-PRINT IS_EMPTY(OBJECT{});/**/
+PRINT IS_EMPTY(OBJECT{});
 
 PRINT book
 PRINT HAS_KEY(book, "author")
@@ -70,6 +70,10 @@ PRINT TYPE_OF(TRUE)
 PRINT TYPE_OF(FALSE)
 PRINT TYPE_OF(STRING("xaxax"))
 PRINT TYPE_OF(NULL)
+
+
+PRINT students[1]
+
 
 PROGRAM_END
 

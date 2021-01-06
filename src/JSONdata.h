@@ -80,7 +80,7 @@ public:
 class Object : public Value
 {
 public:
-    std::map<std::string, std::reference_wrapper<Printable>> _data;
+    std::map<std::string, std::reference_wrapper<Value>> _data;
 public:
     Object(std::initializer_list<std::reference_wrapper<Printable>> data)
     {
@@ -88,9 +88,13 @@ public:
 
         for (auto itr = data.begin(); itr != data.end(); ++itr)
         {
-            Key* key = dynamic_cast<Key*> (&(itr->get()));
-            if(key)
-                _data.emplace(key->GetData(), *std::next(itr, 1));
+            Key* key = dynamic_cast<Key*> (&(itr->get()));           
+            if (key)
+            {
+                Value& val = *dynamic_cast<Value*> (&std::next(itr, 1)->get());
+                _data.emplace(key->GetData(), val);
+            }
+                
             else
             {
                 std::cout << "Error: Wrong Object format (Must be key, value).\n";
@@ -99,7 +103,6 @@ public:
                 
             ++itr;
         }
-
     }
 
     virtual std::string ToString() const override
@@ -131,9 +134,14 @@ public:
         return "object";
     }
 
-    std::map<std::string, std::reference_wrapper<Printable>>& GetData()
+    std::map<std::string, std::reference_wrapper<Value>>& GetData()
     {
         return _data;
+    }
+
+    Value& operator[](std::string str)
+    {
+
     }
 };
 
@@ -251,13 +259,13 @@ public:
         return _data;
     }
 
-    Value* operator[](int index)
+    Value& operator[](int index)
     {
         if (index >= _data.size()) {
             std::cout << "Error: Array index out of bound.";
             exit(0);
         }
-        return _data[index];
+        return *_data[index];
     }
 
     std::string operator[](std::string str)
@@ -370,11 +378,4 @@ std::string TYPE_OF(Value& val)
     return val.GetClassName();
 }
 
-/*    std::string typeName = typeid(val).name();
 
-    typeName = typeName.substr(6);
-
-    std::transform(typeName.begin(), typeName.end(), typeName.begin(),
-        [](unsigned char c) { return std::tolower(c); });
-
-    return typeName;*/
