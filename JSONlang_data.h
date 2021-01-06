@@ -51,7 +51,7 @@ public:
 
 class Object : public Value
 {
-private:
+public:
     std::map< std::string, std::reference_wrapper<Printable> > _data;
     //std::map< std::string, Printable* > _data;
 public:
@@ -236,12 +236,57 @@ Value& operator,(Value& val1, Value& val2)
     return val1;
 }
 
-
 std::ostream& operator,( std::ostream& os, Value& val)
 {
     os << val.ToString() << std::endl;
     return os;
 }
 
+std::ostream& operator,(std::ostream& os, int var)
+{
+    os << var << std::endl;
+    return os;
+}
 
+std::ostream& operator,(std::ostream& os, bool var)
+{
+    if(var)
+        os << "true" << std::endl;
+    else
+        os << "false" << std::endl;
+    return os;
+}
 
+std::ostream& operator,(std::ostream& os, std::string str)
+{
+    os << str << std::endl;
+    return os;
+}
+
+// Functions
+int SIZE_OF(Value& val)
+{
+    Object* obj = dynamic_cast<Object*>(&val);
+    if (obj)
+        return obj->_data.size();
+    
+    Array* arr = dynamic_cast<Array*>(&val);
+    if (arr)    
+        return arr->_data.size();
+    
+    return 1;
+}
+
+bool IS_EMPTY(Value& val)
+{
+    Object* obj = dynamic_cast<Object*>(&val);
+    if (obj)
+        return (obj->_data.size() == 0);        
+       
+
+    Array* arr = dynamic_cast<Array*>(&val);
+    if (arr)
+        return (arr->_data.size() == 0);
+
+    return false;
+}

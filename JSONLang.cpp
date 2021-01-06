@@ -48,7 +48,17 @@ PRINT students*/
 
 //PRINT t, t1
 
-PRINT t, t1, t ,t1 ,t ,t
+PRINT t, t1, t, t1, t, t
+
+;
+
+PRINT SIZE_OF(book);
+PRINT SIZE_OF(week_temperatures);
+PRINT SIZE_OF(t);
+
+PRINT IS_EMPTY(OBJECT{});
+
+
 
 PROGRAM_END
 
