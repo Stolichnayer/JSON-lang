@@ -1,16 +1,28 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <algorithm>
+
 #include "JSONlang_data.h"
 
-#define PROGRAM_BEGIN   int main() {
+#define PROGRAM_BEGIN   int main() { 
 #define PROGRAM_END	    ;}
 
-#define JSON(name) auto name
+// JSON Variable definition
+#define JSON(name)		;auto name
 
 // Types
-#define NUMBER(num)		num
-#define STRING			std::string
-#define TRUE			true
-#define FALSE			false
-#define OBJECT			Object
+#define STRING			*new String
+#define NUMBER			*new Number
+#define TRUE			*new Boolean(true)
+#define FALSE			*new Boolean(false)	
+#define NULL			*new Null()
+#define OBJECT			*new Object
+#define ARRAY			(*(new Array))
+
 // Stringify
-#define KEY(text)		std::string(#text)
-	
+#define KEY(text)		*new Key(#text), 0 ? (*new Value)
+
+// Commands
+#define PRINT			;std::cout , 

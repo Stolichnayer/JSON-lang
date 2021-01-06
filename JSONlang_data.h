@@ -1,8 +1,3 @@
-#include <iostream>
-#include <string>
-#include <map>
-#include <vector>
-
 class Printable
 {
 public:
@@ -84,6 +79,9 @@ public:
 
     virtual std::string ToString() const override 
     {  
+        if (_data.size() == 0)
+            return "{}";
+
         std::string str = "{ ";
         
         for (auto itr = _data.begin(); itr != _data.end(); ++itr)
@@ -177,6 +175,9 @@ public:
 
     virtual std::string ToString() const override
     {
+        if (_data.size() == 0)
+            return "[]";
+
         std::string str = "[ ";
         for (auto v : _data)
         {            
@@ -213,10 +214,6 @@ public:
 };
 
 
-
-
-
-
 // Operator Overloads
 std::ostream& operator<<(std::ostream& os, Value& val)
 {
@@ -232,7 +229,6 @@ std::ostream& operator<<(Value& val, std::ostream& os)
 
 Value& operator,(Value& val1, Value& val2)
 {
-    //val1._data.insert(val1._data.begin(), val2._data.begin(), val2._data.end());
     for (auto v : val2._data)
     {
         val1._data.push_back(v);
@@ -241,32 +237,11 @@ Value& operator,(Value& val1, Value& val2)
 }
 
 
-
-
-/*
-std::ostream& operator<<(Printable& pr, std::ostream& os)
+std::ostream& operator,( std::ostream& os, Value& val)
 {
-    os << pr.ToString();
+    os << val.ToString() << std::endl;
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, Printable& pr)
-{
-    os << pr.ToString();
-    return os;
-}
-
-
-
-std::string operator+(String& s1, String& s2)
-{
-    return std::string((s1.ToString() + s2.ToString()));
-}
-
-
-Key* operator,(Key k, Key k2)
-{
-    return new Key("Xaxa");
-}*/
 
 
