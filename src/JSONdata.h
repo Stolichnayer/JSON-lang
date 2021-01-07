@@ -47,7 +47,12 @@ public:
     {
         return "value";
     }
-    
+
+    virtual Value& operator[](std::string str)
+    {
+        std::cout << "VALUE OPERATOR[]";
+        return *new Value;
+    }
 };
 
 class String : public Value
@@ -93,8 +98,7 @@ public:
             {
                 Value& val = *dynamic_cast<Value*> (&std::next(itr, 1)->get());
                 _data.emplace(key->GetData(), val);
-            }
-                
+            }                
             else
             {
                 std::cout << "Error: Wrong Object format (Must be key, value).\n";
@@ -141,7 +145,14 @@ public:
 
     Value& operator[](std::string str)
     {
+        for (const auto& pair : _data)
+        {
+            if (pair.first == str)            
+                return pair.second;            
+        }
 
+        std::cout << "Error: Key \"" << str << "\" was not found in object.\n";
+        exit(1);
     }
 };
 
@@ -266,12 +277,6 @@ public:
             exit(0);
         }
         return *_data[index];
-    }
-
-    std::string operator[](std::string str)
-    {
-        std::cout << "NAI re string";
-        return "STRIGKOS";
     }
 
     Array& operator[](Value& val)

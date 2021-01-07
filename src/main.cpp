@@ -39,7 +39,7 @@ JSON(students) = ARRAY[
 JSON(t) = NUMBER(66)
 JSON(t1) = NUMBER(55)
 
-
+/*
 PRINT emptyObj
 PRINT emptyArray
 PRINT book
@@ -72,8 +72,10 @@ PRINT TYPE_OF(STRING("xaxax"))
 PRINT TYPE_OF(NULL)
 
 
-PRINT students[1]
-
+PRINT students[1]*/
+;
+		
+PRINT students[0]["grades"]
 
 PROGRAM_END
 
