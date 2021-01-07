@@ -36,6 +36,18 @@ JSON(students) = ARRAY[
 
 ]
 
+JSON(students2) = ARRAY[
+	OBJECT{
+	KEY(name) : STRING("Kevin Malone"),
+	KEY(id) : NUMBER(4444),
+	KEY(grades) : ARRAY[
+	OBJECT { KEY(hy100) : NUMBER(9.5) },
+	OBJECT { KEY(hy150) : NUMBER(9) }
+	]
+	}
+
+]
+
 JSON(t) = NUMBER(66)
 JSON(t1) = NUMBER(55)
 
@@ -75,8 +87,8 @@ PRINT TYPE_OF(NULL)
 PRINT students[1]*/
 ;
 		
-	PRINT students[0]["grades"][1]["hy150"]
-		;
+PRINT students[0]["grades"][1]["hy150"]
+	;
 week_temperatures[2] = NUMBER(66)
 
 PRINT week_temperatures
@@ -89,6 +101,13 @@ PRINT t1 > t
 PRINT t1 >= t
 PRINT t1 <= t
 PRINT t1 < t
+
+PRINT !TRUE
+;
+std::cout << " nai\n\n";
+
+
+PRINT students == students2
 
 PROGRAM_END
 

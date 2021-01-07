@@ -444,7 +444,7 @@ Boolean& operator<(Value& val1, Value& val2)
 
     if (className1 == "number" && className2 == "number")
     {
-        Boolean* boolean = new Boolean(((Number*)&val1)->GetData() < ((Number*)&val2)->GetData());
+        Boolean* boolean = new Boolean( ((Number*)&val1)->GetData() < ((Number*)&val2)->GetData() );
         return *boolean;
     }
     else
@@ -461,7 +461,7 @@ Boolean& operator>=(Value& val1, Value& val2)
 
     if (className1 == "number" && className2 == "number")
     {
-        Boolean* boolean = new Boolean(((Number*)&val1)->GetData() >= ((Number*)&val2)->GetData());
+        Boolean* boolean = new Boolean( ((Number*)&val1)->GetData() >= ((Number*)&val2)->GetData() );
         return *boolean;
     }
     else
@@ -478,12 +478,96 @@ Boolean& operator<=(Value& val1, Value& val2)
 
     if (className1 == "number" && className2 == "number")
     {
-        Boolean* boolean = new Boolean(((Number*)&val1)->GetData() <= ((Number*)&val2)->GetData());
+        Boolean* boolean = new Boolean( ((Number*)&val1)->GetData() <= ((Number*)&val2)->GetData() );
         return *boolean;
     }
     else
     {
         std::cout << "Error: operator '<=' can only be used between Number objects.\n";
+        exit(1);
+    }
+}
+
+Boolean& operator&&(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == "boolean" && className2 == "boolean")
+    {
+        Boolean* boolean = new Boolean( ((Boolean*)&val1)->GetData() && ((Boolean*)&val2)->GetData() );
+        return *boolean;
+    }
+    else
+    {
+        std::cout << "Error: operator '&&' can only be used between Boolean objects.\n";
+        exit(1);
+    }
+}
+
+Boolean& operator||(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == "boolean" && className2 == "boolean")
+    {
+        Boolean* boolean = new Boolean( ((Boolean*)&val1)->GetData() || ((Boolean*)&val2)->GetData() );
+        return *boolean;
+    }
+    else
+    {
+        std::cout << "Error: operator '||' can only be used between Boolean objects.\n";
+        exit(1);
+    }
+}
+
+Boolean& operator!(Value& val)
+{
+    std::string className1 = val.GetClassName();
+
+    if (className1 == "boolean")
+    {
+        Boolean* boolean = new Boolean( !((Boolean*)&val)->GetData() );
+        return *boolean;
+    }
+    else
+    {
+        std::cout << "Error: operator '!' can only be used with Boolean object.\n";
+        exit(1);
+    }
+}
+
+Boolean& operator==(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == className2)
+    {
+        Boolean* boolean = new Boolean( val1.ToString() == val2.ToString());
+        return *boolean;
+    }
+    else
+    {
+        std::cout << "Error: operator '==' can only be used between same type objects.\n";
+        exit(1);
+    }
+}
+
+Boolean& operator!=(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == className2)
+    {
+        Boolean* boolean = new Boolean(val1.ToString() != val2.ToString());
+        return *boolean;
+    }
+    else
+    {
+        std::cout << "Error: operator '!=' can only be used between same type objects.\n";
         exit(1);
     }
 }
