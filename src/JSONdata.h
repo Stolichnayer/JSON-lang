@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <typeinfo>
+#include <cmath> 
 
 class Printable
 {
@@ -50,8 +51,14 @@ public:
 
     virtual Value& operator[](std::string str)
     {
-        std::cout << "VALUE OPERATOR[]";
-        return *new Value;
+        std::cout << "Error: Cannot use operator '[\"string\"]' on this value.\n";
+        exit(1);        
+    }
+
+    virtual Value& operator[](int index)
+    {
+        std::cout << "Error: Cannot use operator '[int]' on this value.\n";
+        exit(1);
     }
 };
 
@@ -186,6 +193,11 @@ public:
     {
         return "number";
     }
+
+    double GetData() 
+    {
+        return _data;
+    }
 };
 
 class Boolean : public Value
@@ -207,6 +219,10 @@ public:
     std::string GetClassName() const override
     {
         return "boolean";
+    }
+
+    bool GetData() {
+        return _data;
     }
 };
 
@@ -334,6 +350,142 @@ std::ostream& operator,(std::ostream& os, std::string str)
 {
     os << str << std::endl;
     return os;
+}
+
+Number& operator-(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == "number" && className2 == "number")
+    {
+        Number *number = new Number( ((Number*)&val1)->GetData() - ((Number*)&val2)->GetData() );
+        return *number;        
+    }
+    else
+    {
+        std::cout << "Error: operator '-' can only be used between Number objects.\n";
+        exit(1);
+    }
+}
+
+Number& operator*(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == "number" && className2 == "number")
+    {
+        Number* number = new Number( ((Number*)&val1)->GetData() * ((Number*)&val2)->GetData() );
+        return *number;
+    }
+    else
+    {
+        std::cout << "Error: operator '*' can only be used between Number objects.\n";
+        exit(1);
+    }
+}
+
+Number& operator/(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == "number" && className2 == "number")
+    {
+        Number* number = new Number( ((Number*)&val1)->GetData() / ((Number*)&val2)->GetData() );
+        return *number;
+    }
+    else
+    {
+        std::cout << "Error: operator '/' can only be used between Number objects.\n";
+        exit(1);
+    }
+}
+
+Number& operator%(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == "number" && className2 == "number")
+    {
+        Number* number = new Number( std::fmod(((Number*)&val1)->GetData(), ((Number*)&val2)->GetData()) );
+        return *number;
+    }
+    else
+    {
+        std::cout << "Error: operator '%' can only be used between Number objects.\n";
+        exit(1);
+    }
+}
+
+Boolean& operator>(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == "number" && className2 == "number")
+    {
+        Boolean* boolean = new Boolean( ((Number*)&val1)->GetData() > ((Number*)&val2)->GetData() );
+        return *boolean;
+    }
+    else
+    {
+        std::cout << "Error: operator '>' can only be used between Number objects.\n";
+        exit(1);
+    }
+}
+
+Boolean& operator<(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == "number" && className2 == "number")
+    {
+        Boolean* boolean = new Boolean(((Number*)&val1)->GetData() < ((Number*)&val2)->GetData());
+        return *boolean;
+    }
+    else
+    {
+        std::cout << "Error: operator '<' can only be used between Number objects.\n";
+        exit(1);
+    }
+}
+
+Boolean& operator>=(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == "number" && className2 == "number")
+    {
+        Boolean* boolean = new Boolean(((Number*)&val1)->GetData() >= ((Number*)&val2)->GetData());
+        return *boolean;
+    }
+    else
+    {
+        std::cout << "Error: operator '>=' can only be used between Number objects.\n";
+        exit(1);
+    }
+}
+
+Boolean& operator<=(Value& val1, Value& val2)
+{
+    std::string className1 = val1.GetClassName();
+    std::string className2 = val2.GetClassName();
+
+    if (className1 == "number" && className2 == "number")
+    {
+        Boolean* boolean = new Boolean(((Number*)&val1)->GetData() <= ((Number*)&val2)->GetData());
+        return *boolean;
+    }
+    else
+    {
+        std::cout << "Error: operator '<=' can only be used between Number objects.\n";
+        exit(1);
+    }
 }
 
 // Functions

@@ -75,7 +75,20 @@ PRINT TYPE_OF(NULL)
 PRINT students[1]*/
 ;
 		
-PRINT students[0]["grades"]
+	PRINT students[0]["grades"][1]["hy150"]
+		;
+week_temperatures[2] = NUMBER(66)
+
+PRINT week_temperatures
+
+PRINT t - t1
+PRINT t * t1
+PRINT t / t1
+PRINT t % t1
+PRINT t1 > t
+PRINT t1 >= t
+PRINT t1 <= t
+PRINT t1 < t
 
 PROGRAM_END
 
