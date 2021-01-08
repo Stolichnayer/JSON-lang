@@ -137,5 +137,50 @@ PRINT week_temperatures + week_temperatures
 PRINT week_temperatures + week_temperatures
 
 
+
+JSON(asd) =
+	OBJECT{
+	KEY(name) : STRING("Kevin Malone"),
+	KEY(id) : NUMBER(4444),
+	KEY(grades) : ARRAY[
+	OBJECT { KEY(hy100) : NUMBER(9.5) },
+	OBJECT { KEY(hy150) : NUMBER(9) }
+	]
+	}
+
+JSON(asd2) =
+	OBJECT{
+	KEY(name2) : STRING("Kevin Malone"),
+	KEY(id2) : NUMBER(4444),
+	KEY(grades2) : ARRAY[
+	OBJECT { KEY(hy100) : NUMBER(9.5) },
+	OBJECT { KEY(hy150) : NUMBER(9) }
+	]
+	}
+
+
+PRINT asd
+;
+std::cout << "\n\n\n";
+/*PRINT OBJECT{
+	KEY(name) : STRING("Kevin Malone"),
+	KEY(id) : NUMBER(4444),
+	KEY(grades) : ARRAY[
+	OBJECT { KEY(hy100) : NUMBER(9.5) },
+	OBJECT { KEY(hy150) : NUMBER(9) }
+	]
+	} 
++ 
+	OBJECT{
+	KEY(name2) : STRING("Kevin Malone"),
+	KEY(id3) : NUMBER(4444),
+	KEY(grades2) : ARRAY[
+	OBJECT { KEY(hy100) : NUMBER(9.5) },
+	OBJECT { KEY(hy150) : NUMBER(9) }
+	]
+	} */
+
+PRINT asd + asd2
+
 PROGRAM_END
 

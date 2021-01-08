@@ -93,6 +93,7 @@ class Object : public Value
 {
 public:
     std::map<std::string, std::reference_wrapper<Value>> _data;
+    std::vector<std::string> keyVector; // To keep order of insertion in map
 public:
     Object(std::initializer_list<std::reference_wrapper<Printable>> data)
     {
@@ -104,7 +105,10 @@ public:
             if (key)
             {
                 Value& val = *dynamic_cast<Value*> (&std::next(itr, 1)->get());
-                _data.emplace(key->GetData(), val);
+
+                auto ret = _data.try_emplace(key->GetData(), val); // Check if emplace failed due to duplicate key
+                if(ret.second)
+                    keyVector.push_back(key->GetData());
             }                
             else
             {
@@ -121,24 +125,44 @@ public:
         if (_data.size() == 0)
             return "{}";
 
+        int iterationCount = 0;
         std::string str = "{ ";
+        for (auto key : keyVector)
+        {
+            iterationCount++;
+            str.append(key);
+            str.append(" : ");
+            str.append(_data.find(key)->second.get().ToString());
 
+            if (iterationCount != _data.size())
+                str.append(", ");
+        }
+        str.append(" }");
+
+        return str;
+    }   
+    /*
+    virtual std::string ToString() const override
+    {
+        if (_data.size() == 0)
+            return "{}";
+
+        int iterationCount = 0;
+        std::string str = "{ ";
         for (auto itr = _data.begin(); itr != _data.end(); ++itr)
         {
+            iterationCount++;
             str.append(itr->first);
             str.append(" : ");
             str.append((itr->second).get().ToString());
 
-            if ((++itr) != _data.end())
+            if (iterationCount != _data.size())
                 str.append(", ");
-
-            --itr;
         }
-
         str.append(" }");
 
         return str;
-    }
+    }*/
 
     std::string GetClassName() const override
     {
@@ -148,6 +172,11 @@ public:
     std::map<std::string, std::reference_wrapper<Value>>& GetData()
     {
         return _data;
+    }
+
+    std::vector<std::string>& GetKeyVector() 
+    {
+        return keyVector;
     }
 
     Value& operator[](std::string str)
@@ -270,7 +299,6 @@ public:
             iterationCount++;
             str.append(v->ToString());
 
-           // if (v != _data[_data.size() - 1])
             if(iterationCount != _data.size())
                 str.append(", ");
         }
@@ -384,6 +412,36 @@ Array& operator+(Array& arr1, Array& arr2)
     }
 
     return *arr;
+}
+
+Object& operator+(Object& obj1, Object& obj2)
+{
+    Object* obj = new Object{};
+
+    auto& map  = obj->GetData();
+    auto& keyVector = obj->GetKeyVector();
+
+    auto& map1 = obj1.GetData();
+    auto& keyVector1 = obj1.GetKeyVector();
+
+    auto& map2 = obj2.GetData();
+    auto& keyVector2 = obj2.GetKeyVector();
+
+    for (auto key : keyVector1)
+    {
+        auto ret = map.try_emplace(key, map1.find(key)->second);
+        if (ret.second) // if try_emplace doesn't fail
+            keyVector.push_back(key);
+    }
+
+    for (auto key : keyVector2)
+    {
+        auto ret = map.try_emplace(key, map2.find(key)->second);
+        if (ret.second) // if try_emplace doesn't fail
+            keyVector.push_back(key);
+    }
+
+    return *obj;
 }
 
 Value& operator+(Value& val1, Value& val2)
