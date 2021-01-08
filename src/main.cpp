@@ -51,7 +51,7 @@ JSON(students2) = ARRAY[
 JSON(t) = NUMBER(66)
 JSON(t1) = NUMBER(55)
 
-/*
+
 PRINT emptyObj
 PRINT emptyArray
 PRINT book
@@ -84,14 +84,12 @@ PRINT TYPE_OF(STRING("xaxax"))
 PRINT TYPE_OF(NULL)
 
 
-PRINT students[1]*/
-;
+
 		
 PRINT students[0]["grades"][1]["hy150"]
-	;
-week_temperatures[2] = NUMBER(66)
 
-PRINT week_temperatures
+
+PRINT week_temperatures 
 
 PRINT t - t1
 PRINT t * t1
@@ -108,6 +106,36 @@ std::cout << " nai\n\n";
 
 
 PRINT students == students2
+
+
+JSON(s1) = STRING("ena")
+JSON(s2) = STRING("duo")
+
+PRINT s1 + s2
+PRINT STRING("ena") + STRING("duo")
+PRINT NUMBER(10) + NUMBER(22)
+PRINT t + t1
+
+JSON(g) =  week_temperatures + week_temperatures
+
+
+
+PRINT week_temperatures + week_temperatures
+
+
+JSON(aaaaa) = ARRAY[
+	NUMBER(20)
+]
+
+JSON(aaaaa2) = ARRAY[
+	NUMBER(10)
+]
+
+PRINT aaaaa + aaaaa
+PRINT week_temperatures + week_temperatures
+
+PRINT week_temperatures + week_temperatures
+
 
 PROGRAM_END
 

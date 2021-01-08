@@ -263,12 +263,15 @@ public:
         if (_data.size() == 0)
             return "[]";
 
-        std::string str = "[ ";
+        int iterationCount = 0;
+        std::string str = "[ ";       
         for (auto v : _data)
         {
+            iterationCount++;
             str.append(v->ToString());
 
-            if (v != _data[_data.size() - 1])
+           // if (v != _data[_data.size() - 1])
+            if(iterationCount != _data.size())
                 str.append(", ");
         }
         str.append(" ]");
@@ -281,7 +284,7 @@ public:
         return "array";
     }
 
-    std::vector<Value*> GetData()
+    std::vector<Value*>& GetData()
     {
         return _data;
     }
@@ -350,6 +353,43 @@ std::ostream& operator,(std::ostream& os, std::string str)
 {
     os << str << std::endl;
     return os;
+}
+
+String& operator+(String& str1, String& str2)
+{
+    String* str = new String(str1.GetData() + str2.GetData());
+    return *str;
+}
+
+Number& operator+(Number& num1, Number& num2) 
+{
+    Number* number = new Number(num1.GetData() + num2.GetData());
+    return *number;
+}
+
+Array& operator+(Array& arr1, Array& arr2)
+{
+    Array* arr = new Array;
+    auto& data = arr->GetData();
+    auto& data1 = arr1.GetData();
+    auto& data2 = arr2.GetData();
+
+    for (auto i : data1)
+    {
+        data.push_back(i);
+    }
+    for (auto i : data2)
+    {
+        data.push_back(i);
+    }
+
+    return *arr;
+}
+
+Value& operator+(Value& val1, Value& val2)
+{
+    std::cout << "Error: operator '+' can only be used between Number, String, Array or Object objects.\n";
+    exit(1);    
 }
 
 Number& operator-(Value& val1, Value& val2)
