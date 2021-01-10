@@ -162,7 +162,7 @@ JSON(asd2) =
 PRINT asd
 ;
 std::cout << "\n\n\n";
-/*PRINT OBJECT{
+PRINT OBJECT{
 	KEY(name) : STRING("Kevin Malone"),
 	KEY(id) : NUMBER(4444),
 	KEY(grades) : ARRAY[
@@ -178,9 +178,53 @@ std::cout << "\n\n\n";
 	OBJECT { KEY(hy100) : NUMBER(9.5) },
 	OBJECT { KEY(hy150) : NUMBER(9) }
 	]
-	} */
+	}
 
-PRINT asd + asd2
+		PRINT asd + asd2
+
+		; std::cout << "telos\n\n";
+
+PRINT students
+PRINT students[0]["grades"][1]["hy150"]
+PRINT students[0]["grades"][1]
+PRINT students[0]["grades"]
+PRINT students[0]
+
+PRINT "telos\n"
+
+JSON(numx1) = NUMBER(students[0]["grades"][1]["hy150"])
+JSON(numx2) = OBJECT(students[0]["grades"][1])
+JSON(numx3) = ARRAY[ARRAY[ARRAY[students[0]["grades"], ARRAY[ARRAY[students[0]["grades"]]]]], ARRAY[ARRAY[students[0]["grades"]]]]
+JSON(numx4) = OBJECT(students[0])
+
+
+PRINT numx1
+PRINT numx2
+PRINT numx3
+PRINT numx4
+
+//JSON(numx12) = NUMBER(students[0]["grades"][1]) // Error. Cannot construct Number
+
+JSON(hy352_ang) = OBJECT{ KEY(exam) : NUMBER(7), KEY(project) : NUMBER(8) }
+
+// Definition of JSON object using operators +, *
+JSON(class_students) = ARRAY[
+	OBJECT{
+   KEY(name) : STRING("Angela ") + STRING("Martin"),
+   KEY(id) : NUMBER(4444),
+   KEY(grades) : ARRAY[
+	OBJECT {
+   KEY(hy352) :
+   hy352_ang["exam"] * NUMBER(0.75) + hy352_ang["project"] * NUMBER(0.25)
+   }
+	]
+	}
+]
+
+PRINT "Hello from const* char!\n" // Printing a string (const char*)
+PRINT hy352_ang // Print Object
+PRINT class_students // Print Array
+
 
 PROGRAM_END
 

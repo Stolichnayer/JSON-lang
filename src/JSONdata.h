@@ -73,6 +73,22 @@ public:
         Value::_data.push_back(this);
     }
 
+    String(Value& val) // Copy constructor
+    {
+        String* str = dynamic_cast<String*> (&val);
+
+        if (str)
+        {
+            _data = str->GetData();
+            Value::_data.push_back(this);
+        }
+        else
+        {
+            std::cout << "Error. Cannot construct String from an object of another class.\n";
+            exit(1);
+        }
+    }
+
     virtual std::string ToString() const override
     {
         return "\"" + _data + "\"";
@@ -93,7 +109,7 @@ class Object : public Value
 {
 public:
     std::map<std::string, std::reference_wrapper<Value>> _data;
-    std::vector<std::string> keyVector; // To keep order of insertion in map
+    std::vector<std::string> _keyVector; // To keep order of insertion in map
 public:
     Object(std::initializer_list<std::reference_wrapper<Printable>> data)
     {
@@ -108,7 +124,7 @@ public:
 
                 auto ret = _data.try_emplace(key->GetData(), val); // Check if emplace failed due to duplicate key
                 if(ret.second)
-                    keyVector.push_back(key->GetData());
+                    _keyVector.push_back(key->GetData());
             }                
             else
             {
@@ -120,6 +136,23 @@ public:
         }
     }
 
+    Object(Value& val) // Copy constructor
+    {
+        Object* obj = dynamic_cast<Object*> (&val);
+
+        if (obj)
+        {
+            Value::_data.push_back(this);
+            _data = obj->GetData();
+            _keyVector = obj->GetKeyVector();
+        }
+        else
+        {
+            std::cout << "Error. Cannot construct Object from an object of another class.\n";
+            exit(1);
+        }
+    }
+
     virtual std::string ToString() const override
     {
         if (_data.size() == 0)
@@ -127,7 +160,7 @@ public:
 
         int iterationCount = 0;
         std::string str = "{ ";
-        for (auto key : keyVector)
+        for (auto key : _keyVector)
         {
             iterationCount++;
             str.append(key);
@@ -176,7 +209,7 @@ public:
 
     std::vector<std::string>& GetKeyVector() 
     {
-        return keyVector;
+        return _keyVector;
     }
 
     Value& operator[](std::string str)
@@ -195,12 +228,28 @@ public:
 class Number : public Value
 {
 private:
-    double _data;
+    double _data = 0;
 public:
     Number(double data)
     {
         _data = data;
         Value::_data.push_back(this);
+    }
+
+    Number(Value& val)
+    {
+        Number* num = dynamic_cast<Number*> (&val);
+
+        if (num)
+        {
+            _data = num->GetData();
+            Value::_data.push_back(this);
+        }
+        else
+        {
+            std::cout << "Error. Cannot construct Number from an object of another class.\n\n";
+            exit(1);            
+        }
     }
 
     virtual std::string ToString() const override
@@ -240,6 +289,22 @@ public:
         Value::_data.push_back(this);
     }
 
+    Boolean(Value& val)
+    {
+        Boolean* boolean = dynamic_cast<Boolean*> (&val);
+
+        if (boolean)
+        {
+            _data = boolean->GetData();
+            Value::_data.push_back(this);
+        }
+        else
+        {
+            std::cout << "Error. Cannot construct Boolean from an object of another class.\n\n";
+            exit(1);
+        }
+    }
+
     virtual std::string ToString() const override
     {
         return _data ? "true" : "false";
@@ -250,7 +315,8 @@ public:
         return "boolean";
     }
 
-    bool GetData() {
+    bool GetData() 
+    {
         return _data;
     }
 };
@@ -263,6 +329,21 @@ public:
     Null()
     {
         Value::_data.push_back(this);
+    }
+
+    Null(Value& val)
+    {
+        Null* nullObj = dynamic_cast<Null*> (&val);
+
+        if (nullObj)
+        {            
+            Value::_data.push_back(this);
+        }
+        else
+        {
+            std::cout << "Error. Cannot construct Null from an object of another class.\n";
+            exit(1);
+        }
     }
 
     virtual std::string ToString() const override
@@ -285,6 +366,22 @@ public:
     Array()
     {
         Value::_data.push_back(this);
+    }
+
+    Array(Value& val)
+    {
+        Array* arr = dynamic_cast<Array*> (&val);
+
+        if (arr)
+        {
+            _data = arr->GetData();
+            Value::_data.push_back(this);
+        }
+        else
+        {
+            std::cout << "Error. Cannot construct Array from an object of another class.\n\n";
+            exit(1);
+        }
     }
 
     virtual std::string ToString() const override
@@ -368,6 +465,12 @@ std::ostream& operator,(std::ostream& os, int var)
     return os;
 }
 
+std::ostream& operator,(std::ostream& os, const char* str)
+{
+    os << str << std::endl;
+    return os;
+}
+
 std::ostream& operator,(std::ostream& os, bool var)
 {
     if (var)
@@ -375,13 +478,8 @@ std::ostream& operator,(std::ostream& os, bool var)
     else
         os << "false" << std::endl;
     return os;
-}
+} 
 
-std::ostream& operator,(std::ostream& os, std::string str)
-{
-    os << str << std::endl;
-    return os;
-}
 
 String& operator+(String& str1, String& str2)
 {
