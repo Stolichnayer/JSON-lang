@@ -225,6 +225,9 @@ PRINT "Hello from const* char!\n" // Printing a string (const char*)
 PRINT hy352_ang // Print Object
 PRINT class_students // Print Array
 
+PRINT ARRAY[ARRAY[ARRAY, ARRAY]] // Array of Array of two empty Arrays
+
+
 
 PROGRAM_END
 

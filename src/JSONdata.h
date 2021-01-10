@@ -471,6 +471,12 @@ std::ostream& operator,(std::ostream& os, const char* str)
     return os;
 }
 
+std::ostream& operator,(std::ostream& os, std::string str)
+{
+    os << str << std::endl;
+    return os;
+}
+
 std::ostream& operator,(std::ostream& os, bool var)
 {
     if (var)
@@ -812,7 +818,8 @@ bool HAS_KEY(Value& val, std::string key)
 
 std::string TYPE_OF(Value& val)
 {
-    return val.GetClassName();
+    std::string str = "\"" + val.GetClassName() + "\"";
+    return str;
 }
 
 
