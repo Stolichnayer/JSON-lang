@@ -338,12 +338,12 @@ JSON(week_temperatures1) = ARRAY[
 		NUMBER(19), NUMBER(18.5), NUMBER(19)
 ]
 
-// SET COMMAND
+// SET - APPEND COMMAND
 PRINT week_temperatures1;
 
 SET week_temperatures1 APPEND NUMBER(99), NUMBER(88), NUMBER(55)
 
-PRINT week_temperatures1;
+PRINT week_temperatures1
 
 ERASE week_temperatures1[0]
 ERASE week_temperatures1[0]
@@ -351,6 +351,59 @@ ERASE week_temperatures1[0]
 ERASE week_temperatures1[5]
 
 PRINT week_temperatures1
+
+//SET - ASSIGN COMMAND
+PRINT "\n\n\n"
+
+JSON(juju) = NUMBER(69)
+JSON(juju2) = NUMBER(123)
+
+JSON(em) = OBJECT {}
+JSON(emar) = ARRAY
+//;
+//Object* em = new Object{};
+//
+//;
+
+PRINT em
+
+SET em ASSIGN OBJECT{ KEY(a) : STRING("alpha") }
+
+//SET em ASSIGN NUMBER(10)
+
+PRINT em
+
+PRINT emar
+
+SET emar ASSIGN ARRAY[NUMBER(44), NUMBER(545), NUMBER(222), NUMBER(234)]
+
+ERASE emar[0]
+ERASE emar[0]
+ERASE emar[1]
+ERASE emar[0]
+//SET em ASSIGN NUMBER(10)
+
+PRINT emar
+
+SET emar ASSIGN ARRAY[NUMBER(66), NUMBER(98), NUMBER(789), NUMBER(999)]
+
+PRINT emar
+
+PRINT "\n\n\n\n";
+
+
+
+JSON(ojojo) = OBJECT{}
+
+PRINT ojojo
+
+SET ojojo ASSIGN OBJECT{ KEY(a11) : STRING("beta"), KEY(bb) : STRING("gamma"), KEY(nn) : STRING("nigg") }
+
+ERASE ojojo["a11"]
+ERASE ojojo["bb"]
+
+
+PRINT ojojo
 
 
 PROGRAM_END

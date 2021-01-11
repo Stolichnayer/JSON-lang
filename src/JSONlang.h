@@ -21,8 +21,9 @@
 // Commands
 #define PRINT			;std::cout , 
 #define ERASE			;EraserManager::GetInstance() <<
-#define SET				&
+#define SET				;&
 #define APPEND			,
+#define ASSIGN			<<
 
 // static member initializer
 EraserManager* EraserManager::eraser = nullptr;

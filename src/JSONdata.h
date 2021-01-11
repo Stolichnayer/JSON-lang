@@ -871,9 +871,9 @@ void operator<<(EraserManager& eraser, Value& val)
     }
 }
 
-Value* operator,(Value* val1, Value& val2)
+Value* operator,(Value* val1Ptr, Value& val2) // SET - APPEND
 {
-    Array* arr = dynamic_cast<Array*> (val1);
+    Array* arr = dynamic_cast<Array*> (val1Ptr);
     if (arr)
     {
         arr->GetData().push_back(&val2);
@@ -882,10 +882,61 @@ Value* operator,(Value* val1, Value& val2)
     }
     else
     {
-        std::cout << "Error. You can only use SET command on Object or Array variables.\n";
+        std::cout << "Error. You can use SET - APPEND command only on Array variables.\n";
         exit(1);
     }
 }
+
+void operator<<(Value* val1Ptr, Value& val2) // SET - ASSIGN
+{
+    if (val1Ptr->GetClassName() == "array")
+    {
+        Array* arr = dynamic_cast<Array*> (val1Ptr);
+        Array* arr2 = dynamic_cast<Array*> (&val2);
+        if (arr->GetData().size() == 0)
+        {
+            if (arr2)
+            {
+                *arr = *arr2;
+                for (auto i : arr->GetData())
+                {
+                    i->_parentContainer = val1Ptr;
+                }
+            }
+            else
+            {
+                std::cout << "Error. Only Array variables can be assigned to an empty Array.\n";
+                exit(1);
+            }
+        }
+    }
+    else if (val1Ptr->GetClassName() == "object")
+    {
+        Object* obj = dynamic_cast<Object*> (val1Ptr);
+        Object* obj2 = dynamic_cast<Object*> (&val2);
+        if (obj->GetData().size() == 0)
+        {
+            if (obj2)
+            {
+                *obj = *obj2;
+                for (auto& i : obj->GetData())
+                {
+                    (i.second.get())._parentContainer = val1Ptr;
+                }
+            }
+            else
+            {
+                std::cout << "Error. Only Object variables can be assigned to an empty Object.\n";
+                exit(1);
+            }
+        }
+    }
+    else 
+    {
+
+    }
+}
+
 
 
 // Functions
