@@ -1,5 +1,6 @@
 #include "JSONlang.h"
 
+
 PROGRAM_BEGIN
 
 //define emptyObj json with empty object
@@ -226,6 +227,39 @@ PRINT hy352_ang // Print Object
 PRINT class_students // Print Array
 
 PRINT ARRAY[ARRAY[ARRAY, ARRAY]] // Array of Array of two empty Arrays
+;
+
+//JSON(ol) = ARRAY[ARRAY[ARRAY, ARRAY]]
+//
+//PRINT "\n\n\n"
+//
+//PRINT ol
+//
+PRINT "\n\n\n"
+//
+//ERASE ol[0][1]
+//PRINT "\n\n\n"
+//PRINT ol
+
+//PRINT students
+//
+//ERASE students
+//
+//PRINT students
+
+
+JSON(a1) = ARRAY[NUMBER(11), NUMBER(12), NUMBER(13), NUMBER(14), NUMBER(15)]
+
+
+PRINT a1
+
+ERASE a1[1]
+
+PRINT a1
+
+PRINT "\n\n\n"
+
+
 
 
 

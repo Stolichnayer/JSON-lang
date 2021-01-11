@@ -4,7 +4,7 @@
 #define PROGRAM_END	    ;}
 
 // JSON Variable definition
-#define JSON(name)		;auto name
+#define JSON(name)		;auto& name
 
 // Types
 #define STRING			*new String
@@ -20,3 +20,8 @@
 
 // Commands
 #define PRINT			;std::cout , 
+#define ERASE			;EraserManager::GetInstance() <<
+
+// static member initializer
+EraserManager* EraserManager::eraser = nullptr;
+

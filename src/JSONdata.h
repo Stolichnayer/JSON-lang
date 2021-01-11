@@ -6,6 +6,20 @@
 #include <typeinfo>
 #include <cmath> 
 
+class EraserManager {
+private:
+   static EraserManager* eraser;
+   EraserManager() {}
+
+public:
+    static EraserManager& GetInstance()
+    {
+        if (!eraser)
+            eraser = new EraserManager();
+        return *eraser;
+    }
+};
+
 class Printable
 {
 public:
@@ -38,6 +52,8 @@ class Value : public Printable
 public:
     // This is needed to initialize arrays with the overloaded comma operator
     std::vector<Value*> _data;
+    // Pointer to class that contains this Value object
+    Value* _parentContainer = nullptr;
 
     virtual std::string ToString() const override
     {
@@ -216,8 +232,8 @@ public:
     {
         for (const auto& pair : _data)
         {
-            if (pair.first == str)            
-                return pair.second;            
+            if (pair.first == str)             
+                return pair.second; 
         }
 
         std::cout << "Error: Key \"" << str << "\" was not found in object.\n";
@@ -415,7 +431,7 @@ public:
     }
 
     Value& operator[](int index)
-    {
+    {        
         if (index >= _data.size()) {
             std::cout << "Error: Array index out of bound.";
             exit(0);
@@ -426,6 +442,10 @@ public:
     Array& operator[](Value& val)
     {
         _data = val._data;
+        for (auto i : _data)
+        {
+            i->_parentContainer = this;
+        }
         return *this;
     }
 };
@@ -773,6 +793,49 @@ Boolean& operator!=(Value& val1, Value& val2)
         exit(1);
     }
 }
+
+void operator<<(EraserManager& eraser, Value& val)
+{
+    //std::cout << "ERASER\n";
+    //if (val.GetClassName() == "array")
+    //{
+    //    Array* arr = dynamic_cast<Array*> (&val);
+    //    arr->GetData().clear();
+    //}
+    //else if (val.GetClassName() == "object")
+    //{
+    //    Object* obj = dynamic_cast<Object*> (&val);
+    //    obj->GetData().clear();
+    //    obj->GetKeyVector().clear();
+    //}
+    if (val.GetClassName() == "number")
+    {
+        if (val._parentContainer == nullptr)
+        {
+            std::cout << "Error: you cannot erase number.";
+            exit(1);
+        }
+  
+        int position = 0;
+        Value* v = val._parentContainer;
+
+        Array* arr = dynamic_cast<Array*> (v);
+        for (auto i : arr->GetData())
+        {
+            if (i == &val)
+            {
+                //arr->GetData().erase(arr->GetData().begin() + position);
+                arr->_data.erase(arr->_data.begin() + position);
+                break;
+            }
+
+            position++;
+        }
+        
+    }
+}
+
+
 
 // Functions
 int SIZE_OF(Value& val)
