@@ -327,5 +327,31 @@ ERASE xx[0]["key1"]
 
 PRINT xx
 
+;
+
+//currentlyAppending = (Value*)&week_temperatures; NUMBER(99), NUMBER(88), NUMBER(55)
+//&week_temperatures , NUMBER(99), NUMBER(88), NUMBER(55)
+
+
+JSON(week_temperatures1) = ARRAY[
+	NUMBER(20), NUMBER(19.5), NUMBER(19), NUMBER(20),
+		NUMBER(19), NUMBER(18.5), NUMBER(19)
+]
+
+// SET COMMAND
+PRINT week_temperatures1;
+
+SET week_temperatures1 APPEND NUMBER(99), NUMBER(88), NUMBER(55)
+
+PRINT week_temperatures1;
+
+ERASE week_temperatures1[0]
+ERASE week_temperatures1[0]
+ERASE week_temperatures1[0]
+ERASE week_temperatures1[5]
+
+PRINT week_temperatures1
+
+
 PROGRAM_END
 

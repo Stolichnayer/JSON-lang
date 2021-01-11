@@ -532,7 +532,7 @@ Array& operator+(Array& arr1, Array& arr2)
     {
         i->_parentContainer = arr;
         data.push_back(i);
-        
+             
     }
     for (auto i : data2)
     {
@@ -871,6 +871,21 @@ void operator<<(EraserManager& eraser, Value& val)
     }
 }
 
+Value* operator,(Value* val1, Value& val2)
+{
+    Array* arr = dynamic_cast<Array*> (val1);
+    if (arr)
+    {
+        arr->GetData().push_back(&val2);
+        val2._parentContainer = arr;
+        return arr;
+    }
+    else
+    {
+        std::cout << "Error. You can only use SET command on Object or Array variables.\n";
+        exit(1);
+    }
+}
 
 
 // Functions
