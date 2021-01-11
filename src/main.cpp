@@ -248,8 +248,7 @@ PRINT "\n\n\n"
 //PRINT students
 
 
-JSON(a1) = ARRAY[NUMBER(11), NUMBER(12), NUMBER(13), NUMBER(14), NUMBER(15)]
-
+JSON(a1) = ARRAY[NUMBER(11), NUMBER(12), NUMBER(13), NUMBER(14), NUMBER(15)] + ARRAY[NUMBER(11), NUMBER(12), NUMBER(13), NUMBER(14), NUMBER(15)]
 
 PRINT a1
 
@@ -257,11 +256,76 @@ ERASE a1[1]
 
 PRINT a1
 
+
 PRINT "\n\n\n"
 
+JSON(class_students111) = ARRAY[
+	OBJECT{
+   KEY(name) : STRING("Angela ") + STRING("Martin"),
+   KEY(id) : NUMBER(4444),
+   KEY(grades) : ARRAY[
+	OBJECT {
+   KEY(hy352) :
+   hy352_ang["exam"] * NUMBER(0.75) + hy352_ang["project"] * NUMBER(0.25)
+   }
+	]
+	}
+]
+
+PRINT class_students111
+
+ERASE class_students111[0]["grades"][0]
+
+PRINT class_students111
+
+PRINT "\n\n\n"
+
+JSON(aoo) = ARRAY[OBJECT{ KEY(name) : STRING("Angela ") + STRING("Martin") },
+NUMBER(100),
+STRING("ste!!"),
+TRUE,
+FALSE,
+NULL,
+ARRAY[STRING("ARRAYINSIDE")]
+
+]
+PRINT aoo
+
+PRINT "\n\n"
+ERASE aoo[6]
+ERASE aoo[1]
 
 
+PRINT aoo
 
+PRINT "\n\n"
+
+PRINT aoo
+ERASE aoo
+PRINT aoo
+
+PRINT asd2
+ERASE asd2
+PRINT asd2
+
+JSON(aoo2) = ARRAY[OBJECT{ KEY(name) : STRING("Angela ") + STRING("Martin") },
+NUMBER(100),
+STRING("ste!!"),
+TRUE,
+FALSE,
+NULL,
+ARRAY[STRING("ARRAYINSIDE")]
+
+]
+PRINT aoo2
+ERASE aoo2[0]["name"]
+PRINT aoo
+
+JSON(xx) = ARRAY[OBJECT{ KEY(key1) : STRING("val"), KEY(key2) : STRING("val"), KEY(key3) : STRING("val"), KEY(key4) : STRING("val") }]
+
+ERASE xx[0]["key1"]
+
+PRINT xx
 
 PROGRAM_END
 

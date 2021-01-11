@@ -131,7 +131,7 @@ public:
     {
         Value::_data.push_back(this);
 
-        for (auto itr = data.begin(); itr != data.end(); ++itr)
+        for (auto itr = data.begin(); itr != data.end(); itr += 2)
         {
             Key* key = dynamic_cast<Key*> (&(itr->get()));           
             if (key)
@@ -139,16 +139,17 @@ public:
                 Value& val = *dynamic_cast<Value*> (&std::next(itr, 1)->get());
 
                 auto ret = _data.try_emplace(key->GetData(), val); // Check if emplace failed due to duplicate key
-                if(ret.second)
+                if (ret.second) 
+                {
                     _keyVector.push_back(key->GetData());
+                    val._parentContainer = this; // To hold the object that contains the map
+                }                    
             }                
             else
             {
-                std::cout << "Error: Wrong Object format (Must be key, value).\n";
+                std::cout << "Error: Wrong Object format (Must be key : value).\n";
                 exit(1);
             }
-                
-            ++itr;
         }
     }
 
@@ -391,6 +392,7 @@ public:
         if (arr)
         {
             _data = arr->GetData();
+            Value::_parentContainer = arr->_parentContainer;
             Value::_data.push_back(this);
         }
         else
@@ -528,11 +530,15 @@ Array& operator+(Array& arr1, Array& arr2)
 
     for (auto i : data1)
     {
+        i->_parentContainer = arr;
         data.push_back(i);
+        
     }
     for (auto i : data2)
     {
+        i->_parentContainer = arr;
         data.push_back(i);
+        
     }
 
     return *arr;
@@ -796,42 +802,72 @@ Boolean& operator!=(Value& val1, Value& val2)
 
 void operator<<(EraserManager& eraser, Value& val)
 {
-    //std::cout << "ERASER\n";
-    //if (val.GetClassName() == "array")
-    //{
-    //    Array* arr = dynamic_cast<Array*> (&val);
-    //    arr->GetData().clear();
-    //}
-    //else if (val.GetClassName() == "object")
-    //{
-    //    Object* obj = dynamic_cast<Object*> (&val);
-    //    obj->GetData().clear();
-    //    obj->GetKeyVector().clear();
-    //}
-    if (val.GetClassName() == "number")
+
+    if (val._parentContainer == nullptr)
     {
-        if (val._parentContainer == nullptr)
+        std::string className = val.GetClassName();
+        if (className == "array")
         {
-            std::cout << "Error: you cannot erase number.";
+            Array* arr = static_cast<Array*> (&val);
+            arr->GetData().clear();
+            return;
+        }        
+        else if (className == "object")
+        {
+            Object* obj = static_cast<Object*> (&val);
+            obj->GetData().clear();
+            obj->GetKeyVector().clear();
+            return;
+        }
+        else
+        {
+            std::cout << "Error: Cannot use command ERASE for a value outside of an Array or an Object.\n";
             exit(1);
         }
-  
-        int position = 0;
-        Value* v = val._parentContainer;
 
-        Array* arr = dynamic_cast<Array*> (v);
+    }  
+        
+    Value* v = val._parentContainer;
+    Array* arr = dynamic_cast<Array*> (v);
+    Object* obj = dynamic_cast<Object*> (v);
+
+    if (arr)
+    {
+        int position = 0;
         for (auto i : arr->GetData())
         {
             if (i == &val)
             {
-                //arr->GetData().erase(arr->GetData().begin() + position);
                 arr->_data.erase(arr->_data.begin() + position);
                 break;
             }
 
             position++;
         }
+    }
+    else if (obj)
+    {
+        auto& vec = obj->GetKeyVector();
+        auto& map = obj->GetData();
         
+        int position = 0;
+        for (auto i : vec)
+        {
+            auto it = map.find(i);
+            if (it != map.end()) // Exists
+            {
+                if (&(it->second.get()) == &val) {
+                    map.erase(it);
+                    vec.erase(vec.begin() + position);
+                    return;
+                }
+            }
+            else
+            {
+                std::cout << "Error in ERASE command. Key does not exist in the map.\n";
+            }
+            position++;
+        }
     }
 }
 
