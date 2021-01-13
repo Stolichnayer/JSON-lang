@@ -437,6 +437,10 @@ public:
 
 
 // Operator Overloads
+
+Object& CloneObject(Object& obj);
+Array& CloneArray(Array& arr);
+
 std::ostream& operator<<(std::ostream& os, Value& val)
 {
     os << val.ToString();
@@ -508,8 +512,9 @@ Array& operator+(Array& arr1, Array& arr2)
 {
     Array* arr = new Array;
     auto& data = arr->GetData();
-    auto& data1 = arr1.GetData();
-    auto& data2 = arr2.GetData();
+
+    auto& data1 = CloneArray(arr1).GetData();
+    auto& data2 = CloneArray(arr2).GetData();
 
     for (auto i : data1)
     {
@@ -529,16 +534,17 @@ Array& operator+(Array& arr1, Array& arr2)
 
 Object& operator+(Object& obj1, Object& obj2)
 {
-    Object* obj = new Object{};
-
+    Object* obj = new Object{}; // New object to construct
     auto& map  = obj->GetData();
     auto& keyVector = obj->GetKeyVector();
 
-    auto& map1 = obj1.GetData();
-    auto& keyVector1 = obj1.GetKeyVector();
+    Object& obj1_cloned = CloneObject(obj1);
+    auto& map1 = obj1_cloned.GetData();
+    auto& keyVector1 = obj1_cloned.GetKeyVector();
 
-    auto& map2 = obj2.GetData();
-    auto& keyVector2 = obj2.GetKeyVector();
+    Object& obj2_cloned = CloneObject(obj2);
+    auto& map2 = obj2_cloned.GetData();
+    auto& keyVector2 = obj2_cloned.GetKeyVector();
 
     for (auto key : keyVector1)
     {
@@ -956,6 +962,7 @@ void operator<<(Value* val1Ptr, Value& val2)
 }
 
 // Functions
+
 int SIZE_OF(Value& val)
 {
     Object* obj = dynamic_cast<Object*>(&val);
@@ -1004,8 +1011,6 @@ std::string TYPE_OF(Value& val)
 }
 
 // Helper Functions
-
-Object& CloneObject(Object& obj);
 
 Array& CloneArray(Array& arr) //Recursive Function that deep copies an Array
 {

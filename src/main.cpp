@@ -401,20 +401,6 @@ SET ar ASSIGN STRING("lo")
 PRINT ar
 
 
-JSON(qwe) = ARRAY[
-	NUMBER(20), NUMBER(19.5), NUMBER(19), NUMBER(20),
-		NUMBER(19), NUMBER(18.5), NUMBER(19)
-]
-
-PRINT qwe + qwe
-
-PRINT qwe 
-
-ERASE qwe[5]
-
-PRINT qwe
-
-
 JSON(cl) = ARRAY[STRING("thesi1"), ARRAY[ARRAY[STRING("akomapiomesa"), FALSE], NUMBER(66), STRING("eswteriko")], TRUE, NULL]
 
 
@@ -448,7 +434,35 @@ PRINT ki2
 PRINT "\n\n\n"
 
 
+JSON(qwe) = ARRAY[
+	NUMBER(20), NUMBER(19.5), NUMBER(19), NUMBER(20),
+		NUMBER(19), NUMBER(18.5), NUMBER(19)
+]
 
+PRINT qwe + qwe
+
+PRINT qwe
+
+ERASE qwe[5]
+
+PRINT qwe
+
+PRINT "\n\n\n\n"
+
+JSON(ki3) = OBJECT{
+	KEY(name4) : STRING("Kevin Malone"),
+	KEY(id4) : NUMBER(4444),
+	KEY(grades4) : ARRAY[
+	OBJECT { KEY(hy100) : NUMBER(9.5) },
+	OBJECT { KEY(hy150) : NUMBER(9) }
+	]
+	}
+
+PRINT ki
+
+JSON(newKi) = ki + ki3
+
+PRINT newKi
 
 PROGRAM_END
 
