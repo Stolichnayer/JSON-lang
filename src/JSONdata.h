@@ -6,6 +6,7 @@
 #include <typeinfo>
 #include <cmath> 
 
+// Eraser Singleton Class for ERASE command
 class EraserManager {
 private:
    static EraserManager* eraser;
@@ -20,6 +21,9 @@ public:
     }
 };
 
+/* Printable class: The Base class of every type that our JSON language supports:
+*  STRING, NUMBER, OBJECT, ARRAY, BOOLEAN (TRUE, FALSE), NULL and KEY
+*/
 class Printable
 {
 public:
@@ -47,6 +51,9 @@ public:
     }
 };
 
+/* Value class: The Base Class of every type that can be assigned to a JSON variable:
+*  STRING, NUMBER, OBJECT, ARRAY, BOOLEAN (TRUE, FALSE), NULL
+*/
 class Value : public Printable
 {
 public:
@@ -76,6 +83,17 @@ public:
     {
         std::cout << "Error: Cannot use operator '[int]' on this value.\n";
         exit(1);
+    }
+
+    ~Value() 
+    {
+        for (auto i : _data)
+        {
+            delete i;
+        }
+        _data.clear();
+
+        delete _parentContainer;
     }
 };
 
@@ -222,6 +240,17 @@ public:
         val->_keyHolder = str;
         val->_parentContainer = this;
         return *val;
+    }
+
+    ~Object()
+    {
+        for (auto pair : _data)
+        {
+            delete &(pair.second.get());
+        }
+        _data.clear();
+
+        delete _parentContainer;
     }
 };
 
@@ -432,6 +461,15 @@ public:
         }
         return *this;
     }
+
+    ~Array()
+    {
+        for (auto i : _data)
+        {
+            delete i;
+        }
+        _data.clear();
+    }
 };
 
 
@@ -502,6 +540,9 @@ std::ostream& operator,(std::ostream& os, bool var)
 
 Value& operator+(Value& val1, Value& val2)
 {
+    //NOTE: memory allocations with 'new' here must be freed in cases such as: JSON(str) = STRING("hey) + STRING("man")
+    //      but not when using operator+ with JSON variables such as:          JSON(str) = str1 + str2
+
     if (val1.GetClassName() == "string" && val2.GetClassName() == "string")
     {
         String* str = new String( ((String*)&val1)->GetData() + ((String*)&val2)->GetData() );
@@ -580,7 +621,7 @@ Number& operator-(Value& val1, Value& val2)
     if (className1 == "number" && className2 == "number")
     {
         Number *number = new Number( ((Number*)&val1)->GetData() - ((Number*)&val2)->GetData() );
-        return *number;        
+        return *number;      
     }
     else
     {

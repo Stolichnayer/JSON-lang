@@ -1,9 +1,8 @@
 #include "JSONlang.h"
 
-
 PROGRAM_BEGIN
 
-/*
+
 //define emptyObj json with empty object
 JSON(emptyObj) = OBJECT{}
 //define emptyArray json with empty array
@@ -495,102 +494,102 @@ PRINT ari
 SET ari ASSIGN ari2
 
 PRINT ari
-*/
-
-//define emptyObj json with empty object
-JSON(emptyObj) = OBJECT{}
-//define emptyArray json with empty array
-JSON(emptyArray) = ARRAY
-//define book json with an object containing data for a book
-JSON(book) = OBJECT{
-KEY(title) : STRING("Gone Girl"),
-KEY(published) : NUMBER(2012),
-KEY(type) : STRING("Thriller"),
-KEY(author) : OBJECT{
- KEY(firstname) : STRING("GILLIAN"),
- KEY(surname) : STRING("FLYNN"),
- KEY(age) : NUMBER(45)
-}
-}
-//define week_temperatures json with an array of numbers
-JSON(week_temperatures) = ARRAY[
-	NUMBER(20), NUMBER(19.5), NUMBER(19), NUMBER(20),
-		NUMBER(19), NUMBER(18.5), NUMBER(19)
-]
-//define students json with an array of objects representing students
-JSON(students) = ARRAY[
-	OBJECT{
-	KEY(name) : STRING("Kevin Malone"),
-	KEY(id) : NUMBER(4444),
-	KEY(grades) : ARRAY[
-	OBJECT { KEY(hy100) : NUMBER(9.5) },
-	OBJECT { KEY(hy150) : NUMBER(9) }
-	]
-	}
-]
-
-PRINT students, week_temperatures, book, emptyArray, emptyObj
-
-//change 3rdday temperature from 19 to 22
-SET week_temperatures[2] ASSIGN NUMBER(22)
-//add email address for 1ststudent
-SET students[0]["email"] ASSIGN STRING("csd404@csd.uoc.gr")
-//assign new object in emptyObj json
-SET emptyObj ASSIGN OBJECT {
-		KEY(a) : STRING("alpha")
-	}
-
-PRINT students, week_temperatures, emptyObj
-
-//appends values 23, 22, 20 to the end of the temperature array
-SET week_temperatures APPEND NUMBER(23), NUMBER(22), NUMBER(20)
-	//appends a grade for course hy255
-SET students[0]["grades"] APPEND OBJECT{ KEY(hy255) : NUMBER(9) }
 
 
-PRINT week_temperatures, students
 
-//ERASE book["author"]["age"] //removes age from author object of book
+////define emptyObj json with empty object
+//JSON(emptyObj) = OBJECT{}
+////define emptyArray json with empty array
+//JSON(emptyArray) = ARRAY
+////define book json with an object containing data for a book
+//JSON(book) = OBJECT{
+//KEY(title) : STRING("Gone Girl"),
+//KEY(published) : NUMBER(2012),
+//KEY(type) : STRING("Thriller"),
+//KEY(author) : OBJECT{
+// KEY(firstname) : STRING("GILLIAN"),
+// KEY(surname) : STRING("FLYNN"),
+// KEY(age) : NUMBER(45)
+//}
+//}
+////define week_temperatures json with an array of numbers
+//JSON(week_temperatures) = ARRAY[
+//	NUMBER(20), NUMBER(19.5), NUMBER(19), NUMBER(20),
+//		NUMBER(19), NUMBER(18.5), NUMBER(19)
+//]
+////define students json with an array of objects representing students
+//JSON(students) = ARRAY[
+//	OBJECT{
+//	KEY(name) : STRING("Kevin Malone"),
+//	KEY(id) : NUMBER(4444),
+//	KEY(grades) : ARRAY[
+//	OBJECT { KEY(hy100) : NUMBER(9.5) },
+//	OBJECT { KEY(hy150) : NUMBER(9) }
+//	]
+//	}
+//]
+//
+//PRINT students, week_temperatures, book, emptyArray, emptyObj
+//
+////change 3rdday temperature from 19 to 22
+//SET week_temperatures[2] ASSIGN NUMBER(22)
+////add email address for 1ststudent
+//SET students[0]["email"] ASSIGN STRING("csd404@csd.uoc.gr")
+////assign new object in emptyObj json
+//SET emptyObj ASSIGN OBJECT {
+//		KEY(a) : STRING("alpha")
+//	}
+//
+//PRINT students, week_temperatures, emptyObj
+//
+////appends values 23, 22, 20 to the end of the temperature array
+//SET week_temperatures APPEND NUMBER(23), NUMBER(22), NUMBER(20)
+//	//appends a grade for course hy255
+//SET students[0]["grades"] APPEND OBJECT{ KEY(hy255) : NUMBER(9) }
+//
+//
+//PRINT week_temperatures, students
+//
+////ERASE book["author"]["age"] //removes age from author object of book
+////PRINT book
+////ERASE book["type"] //removes type of book
+////PRINT book
+////ERASE book //removes all book data, now book is an empty object
+//
 //PRINT book
-//ERASE book["type"] //removes type of book
-//PRINT book
-//ERASE book //removes all book data, now book is an empty object
-
-PRINT book
-
-JSON(conStr) = STRING("hello") + STRING(" world")
-
-PRINT conStr
-
-JSON(conArray) = ARRAY[NUMBER(1), NUMBER(2)] + ARRAY[NUMBER(3), NUMBER(4)]
-
-PRINT conArray
-
-JSON(hy352_ang) = OBJECT{ KEY(exam) : NUMBER(7), KEY(project) : NUMBER(8) }
-JSON(students2) = ARRAY[
-	OBJECT{
-   KEY(name) : STRING("Angela ") + STRING("Martin"),
-   KEY(id) : NUMBER(4444),
-   KEY(grades) : ARRAY[
-	OBJECT {
-   KEY(hy352) :
-   hy352_ang["exam"] * NUMBER(0.75) + hy352_ang["project"] * NUMBER(0.25)
-   }
-	]
-	}
-]
-
-PRINT hy352_ang, students2
-PRINT "\n\n\n"
-
-PRINT book["title"] //prints:Gone Girl
-PRINT book["author"] //prints:	{ firstname:”Gillian”,surname : “Flynn”,age : 45 }
-PRINT book //prints: the whole json for book
-PRINT HAS_KEY(book, "author")//prints: true
-//prints: Book has key author? True
-PRINT STRING("Book has key author? "), HAS_KEY(book, "author")
-
-PRINT book["ti33tle"]
+//
+//JSON(conStr) = STRING("hello") + STRING(" world")
+//
+//PRINT conStr
+//
+//JSON(conArray) = ARRAY[NUMBER(1), NUMBER(2)] + ARRAY[NUMBER(3), NUMBER(4)]
+//
+//PRINT conArray
+//
+//JSON(hy352_ang) = OBJECT{ KEY(exam) : NUMBER(7), KEY(project) : NUMBER(8) }
+//JSON(students2) = ARRAY[
+//	OBJECT{
+//   KEY(name) : STRING("Angela ") + STRING("Martin"),
+//   KEY(id) : NUMBER(4444),
+//   KEY(grades) : ARRAY[
+//	OBJECT {
+//   KEY(hy352) :
+//   hy352_ang["exam"] * NUMBER(0.75) + hy352_ang["project"] * NUMBER(0.25)
+//   }
+//	]
+//	}
+//]
+//
+//PRINT hy352_ang, students2
+//PRINT "\n\n\n"
+//
+//PRINT book["title"]				//prints:Gone Girl
+//PRINT book["author"]			//prints:	{ firstname:”Gillian”,surname : “Flynn”,age : 45 }
+//PRINT book						//prints: the whole json for book
+//PRINT HAS_KEY(book, "author")	//prints: true
+//PRINT STRING("Book has key author? "), HAS_KEY(book, "author")//prints: Book has key author? True
+//
+//PRINT book["ti33tle"] // Error. Key was not found
 
 PROGRAM_END
 
@@ -598,3 +597,5 @@ PROGRAM_END
 *		 2) 
 * 
 */
+
+
