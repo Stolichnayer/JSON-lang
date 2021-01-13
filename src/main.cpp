@@ -341,7 +341,7 @@ JSON(week_temperatures1) = ARRAY[
 // SET - APPEND COMMAND
 PRINT week_temperatures1;
 
-SET week_temperatures1 APPEND NUMBER(99), NUMBER(88), NUMBER(55)
+SET week_temperatures1 APPEND NUMBER(90909), STRING("naire"), NUMBER(55)
 
 PRINT week_temperatures1
 
@@ -455,6 +455,29 @@ PRINT ki
 JSON(newKi) = ki + ki3
 
 PRINT newKi
+
+PRINT "\n\n\n\n"
+
+JSON(are) = ARRAY[NUMBER(1000), OBJECT{
+	KEY(name4) : STRING("Kevin Malone"),
+	KEY(id4) : NUMBER(4444),
+	KEY(grades4) : ARRAY[
+	OBJECT { KEY(hy100) : NUMBER(9.5) },
+	OBJECT { KEY(hy150) : NUMBER(9) }
+	]
+	}, STRING("stringkos")]
+		
+PRINT are
+
+SET are[1]["grades4"] APPEND NUMBER(1213), STRING("nini"), OBJECT{}, ARRAY[NUMBER(20)]
+
+PRINT are 
+
+JSON(na) = OBJECT{KEY(eno): ARRAY[STRING("xaxa")]}
+
+SET are APPEND na
+
+PRINT are
 
 PROGRAM_END
 

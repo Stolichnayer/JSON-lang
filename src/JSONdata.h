@@ -786,9 +786,8 @@ Boolean& operator!=(Value& val1, Value& val2)
     }
 }
 
-void operator<<(EraserManager& eraser, Value& val)
+void operator<<(EraserManager& eraser, Value& val) // ERASE Command
 {
-
     if (val._parentContainer == nullptr)
     {
         std::string className = val.GetClassName();
@@ -862,8 +861,49 @@ Value* operator,(Value* val1Ptr, Value& val2) // SET - APPEND
     Array* arr = dynamic_cast<Array*> (val1Ptr);
     if (arr)
     {
-        arr->GetData().push_back(&val2);
-        val2._parentContainer = arr;
+        if (val2.GetClassName() == "string")
+        {
+            String* str = new String( ((String*)&val2)->GetData() );
+            str->_parentContainer = arr;
+
+            arr->GetData().push_back(str);
+        }
+        else if (val2.GetClassName() == "number")
+        {
+            Number* num = new Number( ((Number*)&val2)->GetData() );
+            num->_parentContainer = arr;
+
+            arr->GetData().push_back(num);
+        }
+        else if (val2.GetClassName() == "boolean")
+        {
+            Boolean* b = new Boolean( ((Boolean*)&val2)->GetData() );
+            b->_parentContainer = arr;
+
+            arr->GetData().push_back(b);
+        }
+        else if (val2.GetClassName() == "null")
+        {
+            Null* null = new Null();
+            null->_parentContainer = arr;
+
+            arr->GetData().push_back(null);
+        }
+        else if (val2.GetClassName() == "array")
+        {
+            Array& clonedArray = CloneArray( *(Array*)&val2);
+            clonedArray._parentContainer = arr;
+
+            arr->GetData().push_back(&clonedArray);
+        }
+        else if (val2.GetClassName() == "object")
+        {
+            Object& clonedObject = CloneObject(*(Object*)&val2);
+            clonedObject._parentContainer = arr;
+
+            arr->GetData().push_back(&clonedObject);
+        }
+
         return arr;
     }
     else
@@ -958,8 +998,7 @@ void operator<<(Value* val1Ptr, Value& val2) // SET - ASSIGN command
 
 }
 
-// Functions
-
+// JSON Functions
 int SIZE_OF(Value& val)
 {
     Object* obj = dynamic_cast<Object*>(&val);
