@@ -353,58 +353,106 @@ ERASE week_temperatures1[5]
 PRINT week_temperatures1
 
 //SET - ASSIGN COMMAND
+
+
+//PRINT students
+//
+SET students[0]["grades"][1]["hy150"] ASSIGN STRING("csd404@csd.uoc.gr")
+
+PRINT students
+
+JSON(tt1) = NUMBER(10)
+
+SET tt1 ASSIGN NUMBER(190)
+
+PRINT tt1
+
+JSON(st) = ARRAY[STRING("enaa")]
+
+SET st[0] ASSIGN STRING("komple")
+
+PRINT st
+
+JSON(neo) = OBJECT{KEY(k1) : STRING("k111"), KEY(k2) : STRING("k222") }
+
+SET neo["k1"] ASSIGN STRING("poutaniaaa?")
+
+PRINT neo
+
+JSON(neo2) = ARRAY[ STRING("444as"), STRING("asdsad"), STRING("k2342422"), STRING("asdasdnn") ]
+
+PRINT neo2
+
+SET neo2[1] ASSIGN OBJECT{ KEY(k1) : STRING("k111"), KEY(k2) : STRING("k222") }
+
+ERASE neo2[1]
+PRINT neo2
+
+JSON(momo) = OBJECT{}
+
+SET momo ASSIGN OBJECT{ KEY(a) : STRING("alpha") }
+
+PRINT momo
+
+JSON(ar) = STRING("11st")
+
+SET ar ASSIGN STRING("lo")
+
+PRINT ar
+
+
+JSON(qwe) = ARRAY[
+	NUMBER(20), NUMBER(19.5), NUMBER(19), NUMBER(20),
+		NUMBER(19), NUMBER(18.5), NUMBER(19)
+]
+
+PRINT qwe + qwe
+
+PRINT qwe 
+
+ERASE qwe[5]
+
+PRINT qwe
+
+
+JSON(cl) = ARRAY[STRING("thesi1"), ARRAY[ARRAY[STRING("akomapiomesa"), FALSE], NUMBER(66), STRING("eswteriko")], TRUE, NULL]
+
+
+JSON(cl2)= CloneArray(cl)
+
+//ERASE cl2[2]
+
+PRINT cl
+
+PRINT cl2
+
 PRINT "\n\n\n"
 
-JSON(juju) = NUMBER(69)
-JSON(juju2) = NUMBER(123)
 
-JSON(em) = OBJECT {}
-JSON(emar) = ARRAY
-//;
-//Object* em = new Object{};
-//
-//;
+JSON(ki) = OBJECT{
+	KEY(name) : STRING("Kevin Malone"),
+	KEY(id) : NUMBER(4444),
+	KEY(grades) : ARRAY[
+	OBJECT { KEY(hy100) : NUMBER(9.5) },
+	OBJECT { KEY(hy150) : NUMBER(9) }
+	]
+	}
 
-PRINT em
+JSON(ki2) = CloneObject(ki)
 
-SET em ASSIGN OBJECT{ KEY(a) : STRING("alpha") }
+ERASE ki["grades"][0]["hy100"]
 
-//SET em ASSIGN NUMBER(10)
+PRINT ki
+PRINT ki2
 
-PRINT em
-
-PRINT emar
-
-SET emar ASSIGN ARRAY[NUMBER(44), NUMBER(545), NUMBER(222), NUMBER(234)]
-
-ERASE emar[0]
-ERASE emar[0]
-ERASE emar[1]
-ERASE emar[0]
-//SET em ASSIGN NUMBER(10)
-
-PRINT emar
-
-SET emar ASSIGN ARRAY[NUMBER(66), NUMBER(98), NUMBER(789), NUMBER(999)]
-
-PRINT emar
-
-PRINT "\n\n\n\n";
+PRINT "\n\n\n"
 
 
-
-JSON(ojojo) = OBJECT{}
-
-PRINT ojojo
-
-SET ojojo ASSIGN OBJECT{ KEY(a11) : STRING("beta"), KEY(bb) : STRING("gamma"), KEY(nn) : STRING("nigg") }
-
-ERASE ojojo["a11"]
-ERASE ojojo["bb"]
-
-
-PRINT ojojo
 
 
 PROGRAM_END
 
+/* TODO: 1) operator+ on arrays & objects with _parentContainer problem
+*		 2) new approach with Value& instead of auto (?)
+* 
+*/

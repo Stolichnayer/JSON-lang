@@ -52,6 +52,7 @@ class Value : public Printable
 public:
     // This is needed to initialize arrays with the overloaded comma operator
     std::vector<Value*> _data;
+    std::string _keyHolder;
     // Pointer to class that contains this Value object
     Value* _parentContainer = nullptr;
 
@@ -190,29 +191,7 @@ public:
         str.append(" }");
 
         return str;
-    }   
-    /*
-    virtual std::string ToString() const override
-    {
-        if (_data.size() == 0)
-            return "{}";
-
-        int iterationCount = 0;
-        std::string str = "{ ";
-        for (auto itr = _data.begin(); itr != _data.end(); ++itr)
-        {
-            iterationCount++;
-            str.append(itr->first);
-            str.append(" : ");
-            str.append((itr->second).get().ToString());
-
-            if (iterationCount != _data.size())
-                str.append(", ");
-        }
-        str.append(" }");
-
-        return str;
-    }*/
+    }
 
     std::string GetClassName() const override
     {
@@ -237,8 +216,12 @@ public:
                 return pair.second; 
         }
 
-        std::cout << "Error: Key \"" << str << "\" was not found in object.\n";
-        exit(1);
+        //std::cout << "Error: Key \"" << str << "\" was not found in object.\n";
+        //exit(1);
+        Value* val = new Value();
+        val->_keyHolder = str;
+        val->_parentContainer = this;
+        return *val;
     }
 };
 
@@ -577,7 +560,7 @@ Object& operator+(Object& obj1, Object& obj2)
 Value& operator+(Value& val1, Value& val2)
 {
     std::cout << "Error: operator '+' can only be used between Number, String, Array or Object objects.\n";
-    exit(1);    
+    exit(1);  
 }
 
 Number& operator-(Value& val1, Value& val2)
@@ -887,57 +870,90 @@ Value* operator,(Value* val1Ptr, Value& val2) // SET - APPEND
     }
 }
 
-void operator<<(Value* val1Ptr, Value& val2) // SET - ASSIGN
+void operator<<(Value* val1Ptr, Value& val2)
 {
-    if (val1Ptr->GetClassName() == "array")
+    Object* parentObj = dynamic_cast<Object*> (val1Ptr->_parentContainer);
+    Array* parentArray = dynamic_cast<Array*> (val1Ptr->_parentContainer);
+    
+    // Value inside Object
+    if (parentObj) 
     {
-        Array* arr = dynamic_cast<Array*> (val1Ptr);
-        Array* arr2 = dynamic_cast<Array*> (&val2);
-        if (arr->GetData().size() == 0)
+        if (val1Ptr->GetClassName() == "value") // Means empty member of object 
         {
-            if (arr2)
+            if (parentObj)
             {
-                *arr = *arr2;
-                for (auto i : arr->GetData())
+                auto ret = parentObj->GetData().try_emplace(val1Ptr->_keyHolder, val2);
+                if (ret.second) // if try_emplace succeeded
                 {
-                    i->_parentContainer = val1Ptr;
+                    parentObj->GetKeyVector().push_back(val1Ptr->_keyHolder);
                 }
             }
             else
-            {
-                std::cout << "Error. Only Array variables can be assigned to an empty Array.\n";
-                exit(1);
-            }
+                std::cout << "Error on SET- ASSIGN. Dynamic cast to object failed.\n";
         }
-    }
-    else if (val1Ptr->GetClassName() == "object")
-    {
-        Object* obj = dynamic_cast<Object*> (val1Ptr);
-        Object* obj2 = dynamic_cast<Object*> (&val2);
-        if (obj->GetData().size() == 0)
-        {
-            if (obj2)
+        else                                    // Not empty member of object
+        { 
+            //Change value of object
+            auto& map = parentObj->GetData();
+
+            for (auto& i : map)
             {
-                *obj = *obj2;
-                for (auto& i : obj->GetData())
+                if (&(i.second.get()) == val1Ptr)
                 {
-                    (i.second.get())._parentContainer = val1Ptr;
-                }
-            }
-            else
-            {
-                std::cout << "Error. Only Object variables can be assigned to an empty Object.\n";
-                exit(1);
+                    val2._parentContainer = parentObj;
+                    i.second = val2; 
+                    return;
+                }                    
             }
         }
     }
+    // Value inside Array
+    else if(parentArray) 
+    {
+        //Change value of array
+        auto& vec = parentArray->GetData();
+
+        for (auto& i : vec)
+        {
+            if (i == val1Ptr)
+            {
+                val2._parentContainer = parentArray;
+                i = &val2;
+                return;
+            }
+        }
+    }
+    //parent = nullptr
     else 
-    {
+    { 
+        if (val1Ptr->GetClassName() == "string" && val2.GetClassName() == "string")
+        {
+            *(String*)val1Ptr = *new String( ((String*)&val2)->GetData() );     
+        }
+        else if (val1Ptr->GetClassName() == "number" && val2.GetClassName() == "number")
+        {
+            *(Number*)val1Ptr = *new Number(((Number*)&val2)->GetData());
+        }
+        else if (val1Ptr->GetClassName() == "boolean" && val2.GetClassName() == "boolean")
+        {
+            *(Boolean*)val1Ptr = *new Boolean(((Boolean*)&val2)->GetData());
+        }
+        else if (val1Ptr->GetClassName() == "null" && val2.GetClassName() == "null")
+        {
 
+        }
+        else if (val1Ptr->GetClassName() == "object" && val2.GetClassName() == "object")
+        {
+            *(Object*)val1Ptr = *(Object*)(&val2);
+        }
+        else if (val1Ptr->GetClassName() == "array" && val2.GetClassName() == "array")
+        {
+            *(Array*)val1Ptr = *(Array*)(&val2);
+        }
     }
+
+
 }
-
-
 
 // Functions
 int SIZE_OF(Value& val)
@@ -987,4 +1003,127 @@ std::string TYPE_OF(Value& val)
     return str;
 }
 
+// Helper Functions
 
+Object& CloneObject(Object& obj);
+
+Array& CloneArray(Array& arr) //Recursive Function that deep copies an Array
+{
+    auto& vec = arr.GetData(); // Old array reference to its vector
+
+    Array* newArr = new Array; // Our new Array
+
+    for (auto i : vec)
+    {        
+        if (i->GetClassName() == "array")
+        {
+            Array* temp = (Array*)i;
+            Array& clonedArr = CloneArray(*temp);
+            clonedArr._parentContainer = newArr;
+
+            newArr->GetData().push_back(&clonedArr);            
+        }
+        else if(i->GetClassName() == "object")
+        {
+            Object* temp = (Object*)i;
+            Object& clonedObj = CloneObject(*temp);
+            clonedObj._parentContainer = newArr;
+
+            newArr->GetData().push_back(&clonedObj);
+        }
+        else if(i->GetClassName() == "string")
+        {
+            String* str = new String( ((String*)i)->GetData() );
+            str->_parentContainer = newArr;
+
+            newArr->GetData().push_back(str);
+        }
+        else if (i->GetClassName() == "number")
+        {
+            Number* num = new Number( ((Number*)i)->GetData() );
+            num->_parentContainer = newArr;
+
+            newArr->GetData().push_back(num);
+        }
+        else if (i->GetClassName() == "boolean")
+        {
+            Boolean* b = new Boolean( ((Boolean*)i)->GetData() );
+            b->_parentContainer = newArr;
+
+            newArr->GetData().push_back(b);
+        }
+        else if (i->GetClassName() == "null")
+        {
+            Null* null = new Null();
+            null->_parentContainer = newArr;
+
+            newArr->GetData().push_back(null);
+        }
+    }
+
+    return *newArr;
+}
+
+
+Object& CloneObject(Object& obj) //Recursive Function that deep copies an Object
+{
+    auto& keyVec = obj.GetKeyVector(); // Old object reference to its key vector
+    auto& map = obj.GetData(); // Old object reference to its key vector
+
+    Object* newObj = new Object{}; // Our new Object
+
+    for (auto i : keyVec) // Deep copy of keyVector
+    {
+        newObj->GetKeyVector().push_back(i);
+    }
+
+    for (auto pair : map) // Deep copy of map
+    {
+        if ( (pair.second.get()).GetClassName() == "array" )
+        {
+            Array* temp = (Array*)&(pair.second.get());
+            Array& clonedArr = CloneArray(*temp);
+            clonedArr._parentContainer = newObj;
+
+            newObj->GetData().emplace(pair.first, clonedArr);
+        }
+        else if ( (pair.second.get()).GetClassName() == "object" )
+        {
+            Object* temp = (Object*)&(pair.second.get());
+            Object& clonedObj = CloneObject(*temp);
+            clonedObj._parentContainer = newObj;
+
+            newObj->GetData().emplace(pair.first, clonedObj);
+        }
+        else if ( (pair.second.get()).GetClassName() == "string")
+        {
+            String& str = *new String( ((String*)(&(pair.second.get())))->GetData() );
+            str._parentContainer = newObj;
+
+            newObj->GetData().emplace(pair.first, str);
+        }
+        else if ( (pair.second.get()).GetClassName() == "number")
+        {
+            Number& num = *new Number( ((Number*)(&(pair.second.get())))->GetData() );
+            num._parentContainer = newObj;
+
+            newObj->GetData().emplace(pair.first, num);
+        }
+        else if ( (pair.second.get()).GetClassName() == "boolean")
+        {
+            Boolean& b = *new Boolean( ((Boolean*)(&(pair.second.get())))->GetData() );
+            b._parentContainer = newObj;
+
+            newObj->GetData().emplace(pair.first, b);
+        }
+        else if ( (pair.second.get()).GetClassName() == "null")
+        {
+            Null& null = *new Null();
+            null._parentContainer = newObj;
+
+            newObj->GetData().emplace(pair.first, null);
+        }
+    }
+
+    return *newObj;
+}
