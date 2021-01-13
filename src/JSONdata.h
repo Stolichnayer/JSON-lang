@@ -357,7 +357,6 @@ public:
     }
 };
 
-
 class Array : public Value
 {
 public:
@@ -495,78 +494,76 @@ std::ostream& operator,(std::ostream& os, bool var)
     return os;
 } 
 
-
-String& operator+(String& str1, String& str2)
-{
-    String* str = new String(str1.GetData() + str2.GetData());
-    return *str;
-}
-
-Number& operator+(Number& num1, Number& num2) 
-{
-    Number* number = new Number(num1.GetData() + num2.GetData());
-    return *number;
-}
-
-Array& operator+(Array& arr1, Array& arr2)
-{
-    Array* arr = new Array;
-    auto& data = arr->GetData();
-
-    auto& data1 = CloneArray(arr1).GetData();
-    auto& data2 = CloneArray(arr2).GetData();
-
-    for (auto i : data1)
-    {
-        i->_parentContainer = arr;
-        data.push_back(i);
-             
-    }
-    for (auto i : data2)
-    {
-        i->_parentContainer = arr;
-        data.push_back(i);
-        
-    }
-
-    return *arr;
-}
-
-Object& operator+(Object& obj1, Object& obj2)
-{
-    Object* obj = new Object{}; // New object to construct
-    auto& map  = obj->GetData();
-    auto& keyVector = obj->GetKeyVector();
-
-    Object& obj1_cloned = CloneObject(obj1);
-    auto& map1 = obj1_cloned.GetData();
-    auto& keyVector1 = obj1_cloned.GetKeyVector();
-
-    Object& obj2_cloned = CloneObject(obj2);
-    auto& map2 = obj2_cloned.GetData();
-    auto& keyVector2 = obj2_cloned.GetKeyVector();
-
-    for (auto key : keyVector1)
-    {
-        auto ret = map.try_emplace(key, map1.find(key)->second);
-        if (ret.second) // if try_emplace doesn't fail
-            keyVector.push_back(key);
-    }
-
-    for (auto key : keyVector2)
-    {
-        auto ret = map.try_emplace(key, map2.find(key)->second);
-        if (ret.second) // if try_emplace doesn't fail
-            keyVector.push_back(key);
-    }
-
-    return *obj;
-}
-
 Value& operator+(Value& val1, Value& val2)
 {
-    std::cout << "Error: operator '+' can only be used between Number, String, Array or Object objects.\n";
-    exit(1);  
+    if (val1.GetClassName() == "string" && val2.GetClassName() == "string")
+    {
+        String* str = new String( ((String*)&val1)->GetData() + ((String*)&val2)->GetData() );
+        return *str;
+    }
+    else if (val1.GetClassName() == "number" && val2.GetClassName() == "number")
+    {
+        Number* num = new Number( ((Number*)&val1)->GetData() + ((Number*)&val2)->GetData() );
+        return *num;
+    }
+    else if (val1.GetClassName() == "array" && val2.GetClassName() == "array")
+    {
+        Array* arr = new Array;
+        auto& data = arr->GetData();
+
+        auto& data1 = CloneArray( *((Array*)&val1) ).GetData();
+        auto& data2 = CloneArray( *((Array*)&val2) ).GetData();
+
+        for (auto i : data1)
+        {
+            i->_parentContainer = arr;
+            data.push_back(i);
+
+        }
+        for (auto i : data2)
+        {
+            i->_parentContainer = arr;
+            data.push_back(i);
+
+        }
+
+        return *arr;
+    }
+    else if (val1.GetClassName() == "object" && val2.GetClassName() == "object")
+    {
+        Object* obj = new Object{}; // New object to construct
+        auto& map = obj->GetData();
+        auto& keyVector = obj->GetKeyVector();
+
+        Object& obj1_cloned = CloneObject( *(Object*)&val1 );
+        auto& map1 = obj1_cloned.GetData();
+        auto& keyVector1 = obj1_cloned.GetKeyVector();
+
+        Object& obj2_cloned = CloneObject( *(Object*)&val2 );
+        auto& map2 = obj2_cloned.GetData();
+        auto& keyVector2 = obj2_cloned.GetKeyVector();
+
+        for (auto key : keyVector1)
+        {
+            auto ret = map.try_emplace(key, map1.find(key)->second);
+            if (ret.second) // if try_emplace doesn't fail
+                keyVector.push_back(key);
+        }
+
+        for (auto key : keyVector2)
+        {
+            auto ret = map.try_emplace(key, map2.find(key)->second);
+            if (ret.second) // if try_emplace doesn't fail
+                keyVector.push_back(key);
+        }
+
+        return *obj;
+    }
+    else
+    {
+        std::cout << "Error: Operator + cannot be used between two different types.\n";
+        exit(1);
+    }
 }
 
 Number& operator-(Value& val1, Value& val2)
@@ -876,7 +873,7 @@ Value* operator,(Value* val1Ptr, Value& val2) // SET - APPEND
     }
 }
 
-void operator<<(Value* val1Ptr, Value& val2)
+void operator<<(Value* val1Ptr, Value& val2) // SET - ASSIGN command
 {
     Object* parentObj = dynamic_cast<Object*> (val1Ptr->_parentContainer);
     Array* parentArray = dynamic_cast<Array*> (val1Ptr->_parentContainer);
@@ -1011,7 +1008,6 @@ std::string TYPE_OF(Value& val)
 }
 
 // Helper Functions
-
 Array& CloneArray(Array& arr) //Recursive Function that deep copies an Array
 {
     auto& vec = arr.GetData(); // Old array reference to its vector
@@ -1068,7 +1064,6 @@ Array& CloneArray(Array& arr) //Recursive Function that deep copies an Array
 
     return *newArr;
 }
-
 
 Object& CloneObject(Object& obj) //Recursive Function that deep copies an Object
 {

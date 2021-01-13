@@ -4,7 +4,7 @@
 #define PROGRAM_END	    ;}
 
 // JSON Variable definition
-#define JSON(name)		;auto& name
+#define JSON(name)		;Value& name
 
 // Types
 #define STRING			*new String

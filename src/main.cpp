@@ -112,7 +112,7 @@ PRINT students == students2
 JSON(s1) = STRING("ena")
 JSON(s2) = STRING("duo")
 
-PRINT s1 + s2
+PRINT s1 + s2 // HERE
 PRINT STRING("ena") + STRING("duo")
 PRINT NUMBER(10) + NUMBER(22)
 PRINT t + t1
@@ -403,14 +403,7 @@ PRINT ar
 
 JSON(cl) = ARRAY[STRING("thesi1"), ARRAY[ARRAY[STRING("akomapiomesa"), FALSE], NUMBER(66), STRING("eswteriko")], TRUE, NULL]
 
-
-JSON(cl2)= CloneArray(cl)
-
-//ERASE cl2[2]
-
 PRINT cl
-
-PRINT cl2
 
 PRINT "\n\n\n"
 
@@ -424,12 +417,11 @@ JSON(ki) = OBJECT{
 	]
 	}
 
-JSON(ki2) = CloneObject(ki)
 
 ERASE ki["grades"][0]["hy100"]
 
 PRINT ki
-PRINT ki2
+
 
 PRINT "\n\n\n"
 
