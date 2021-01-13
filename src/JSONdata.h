@@ -463,6 +463,12 @@ Value& operator,(Value& val1, Value& val2)
 
 std::ostream& operator,(std::ostream& os, Value& val)
 {
+    if (val.GetClassName() == "value" && val._keyHolder != "")
+    {
+        std::cout << "Error. Key \"" << val._keyHolder << "\" was not found in Object.\n";
+        return os;
+    }
+
     os << val.ToString() << std::endl;
     return os;
 }
@@ -968,10 +974,11 @@ void operator<<(Value* val1Ptr, Value& val2) // SET - ASSIGN command
     }
     //parent = nullptr
     else 
-    { 
+    {    
+
         if (val1Ptr->GetClassName() == "string" && val2.GetClassName() == "string")
         {
-            *(String*)val1Ptr = *new String( ((String*)&val2)->GetData() );     
+            *(String*)val1Ptr = *new String(((String*)&val2)->GetData());
         }
         else if (val1Ptr->GetClassName() == "number" && val2.GetClassName() == "number")
         {
@@ -993,7 +1000,37 @@ void operator<<(Value* val1Ptr, Value& val2) // SET - ASSIGN command
         {
             *(Array*)val1Ptr = *(Array*)(&val2);
         }
+        else
+        {
+            std::cout << "Error. You cannot assign to a variable a variable with a different type.\n";
+            exit(1);
+        }
     }
+    //    if (val2.GetClassName() == "string")
+    //    {
+    //        *(String*)val1Ptr = *(String*)&val2;
+    //    }
+    //    else if (val2.GetClassName() == "number")
+    //    {
+    //        *(Number*)val1Ptr = *(Number*)&val2;
+    //    }
+    //    else if (val2.GetClassName() == "boolean")
+    //    {
+    //        *(Boolean*)val1Ptr = *new Boolean(((Boolean*)&val2)->GetData());
+    //    }
+    //    else if (val2.GetClassName() == "null")
+    //    {
+
+    //    }
+    //    else if (val2.GetClassName() == "object")
+    //    {
+    //        *(Object*)val1Ptr = *(Object*)(&val2);
+    //    }
+    //    else if (val2.GetClassName() == "array")
+    //    {
+    //        *(Array*)val1Ptr = *(Array*)(&val2);
+    //    }
+    //}
 
 
 }
