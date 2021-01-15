@@ -63,7 +63,7 @@ PRINT students
 
 PRINT t, t1, t, t1, t, t
 
-
+PRINT("here\n\n")
 
 PRINT SIZE_OF(book);
 PRINT SIZE_OF(week_temperatures);
@@ -83,8 +83,6 @@ PRINT TYPE_OF(TRUE)
 PRINT TYPE_OF(FALSE)
 PRINT TYPE_OF(STRING("xaxax"))
 PRINT TYPE_OF(NULL)
-
-
 
 		
 PRINT students[0]["grades"][1]["hy150"]
@@ -495,7 +493,30 @@ SET ari ASSIGN ari2
 
 PRINT ari
 
+PRINT "NEWERA\nn\n\n\n\n\n\n"
+PRINT SIZE_OF(book);
+PRINT SIZE_OF(week_temperatures);
+PRINT SIZE_OF(t);
 
+PRINT IS_EMPTY(OBJECT{});
+
+PRINT book
+PRINT HAS_KEY(book, "author")
+
+
+PRINT TYPE_OF(book)
+PRINT TYPE_OF(week_temperatures)
+PRINT TYPE_OF(emptyObj)
+PRINT TYPE_OF(t)
+PRINT TYPE_OF(TRUE)
+PRINT TYPE_OF(FALSE)
+PRINT TYPE_OF(STRING("xaxax"))
+PRINT TYPE_OF(NULL)
+
+
+JSON(newera) = ARRAY[HAS_KEY(book, "author"),  SIZE_OF(book), IS_EMPTY(OBJECT{}), TYPE_OF(book), TYPE_OF(emptyObj), TYPE_OF(FALSE), TYPE_OF(STRING("xaxax"))];
+
+PRINT newera
 
 ////define emptyObj json with empty object
 //JSON(emptyObj) = OBJECT{}
@@ -593,7 +614,7 @@ PRINT ari
 
 PROGRAM_END
 
-/* TODO: 1) Print of non existant key ? value class
+/* TODO: 1) SIZE_OF etc must return JSON value 
 *		 2) 
 * 
 */

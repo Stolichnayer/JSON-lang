@@ -59,7 +59,7 @@ class Value : public Printable
 public:
     // This is needed to initialize arrays with the overloaded comma operator
     std::vector<Value*> _data;
-    std::string _keyHolder;
+    std::string _keyHolder = "";
     // Pointer to class that contains this Value object
     Value* _parentContainer = nullptr;
 
@@ -87,9 +87,11 @@ public:
 
     ~Value() 
     {
+        std::cout << "\n!!!!!!!!!!!!!!!!!!!!!!!!!!CALLED\n";
         for (auto i : _data)
         {
-            delete i;
+            if(this != i)
+                delete i;
         }
         _data.clear();
 
@@ -1077,33 +1079,47 @@ void operator<<(Value* val1Ptr, Value& val2) // SET - ASSIGN command
 }
 
 // JSON Functions
-int SIZE_OF(Value& val)
+Number& SIZE_OF(Value& val)
 {
     Object* obj = dynamic_cast<Object*>(&val);
     if (obj)
-        return obj->GetData().size();
+    {        
+        Number* num = new Number(obj->GetData().size());
+        return *num;
+    }
 
     Array* arr = dynamic_cast<Array*>(&val);
-    if (arr)
-        return arr->GetData().size();
-
-    return 1;
+    if (arr) 
+    {
+        Number* num = new Number(arr->GetData().size());
+        return *num;
+    }
+        
+    Number* num = new Number(1);
+    return *num;
 }
 
-bool IS_EMPTY(Value& val)
+Boolean& IS_EMPTY(Value& val)
 {
     Object* obj = dynamic_cast<Object*>(&val);
     if (obj)
-        return (obj->GetData().size() == 0);
+    {
+        Boolean* b = new Boolean(obj->GetData().size() == 0);
+        return *b;
+    }        
 
     Array* arr = dynamic_cast<Array*>(&val);
     if (arr)
-        return (arr->GetData().size() == 0);
+    {
+        Boolean* b = new Boolean(arr->GetData().size() == 0);
+        return *b;
+    }
 
-    return false;
+    Boolean* b = new Boolean(false);
+    return *b;
 }
 
-bool HAS_KEY(Value& val, std::string key)
+Boolean& HAS_KEY(Value& val, std::string key)
 {
     Object* obj = dynamic_cast<Object*>(&val);
     if (obj)
@@ -1111,17 +1127,17 @@ bool HAS_KEY(Value& val, std::string key)
         for (const auto& i : obj->GetData())
         {
             if (i.first == key)
-                return true;
+                return *new Boolean(true);
         }
     }
 
-    return false;        
+    return *new Boolean(false);        
 }
 
-std::string TYPE_OF(Value& val)
+String& TYPE_OF(Value& val)
 {
-    std::string str = "\"" + val.GetClassName() + "\"";
-    return str;
+    std::string str = val.GetClassName();
+    return *new String(str);
 }
 
 // Helper Functions
