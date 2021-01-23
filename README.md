@@ -1,4 +1,4 @@
-Language for JSON (JavaScript Object Notation)
+#JSON-lang Language for JSON (JavaScript Object Notation)
 
 In this project, a specific-purpose language is implemented for definitions and usage
 of data in JSON format. This language is compiled in C++ by including only the "JSONlang.h"
