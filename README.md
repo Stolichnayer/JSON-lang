@@ -21,6 +21,7 @@ PROGRAM_BEGIN
     json editing statementn 
 PROGRAM_END
 ```
+#### NOTE: No semicolon is used.
 
 ### Language elements
 
