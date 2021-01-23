@@ -5,21 +5,22 @@ of data in JSON format. This language is compiled to C++ by including only the "
 header file.
 
 Language Format:
-
-#include "JSONlang.h" <br>
-json variable definition1 <br>
-json variable definition2 <br>
-… <br>
-PROGRAM_BEGIN <br>
-&emsp; json variable definition3 <br>
-&emsp; … <br>
-&emsp; json editing statement1 <br>
-&emsp; json variable definitionk <br>
-&emsp; … <br>
-&emsp; json editing statement2 <br>
-&emsp; … <br>
-&emsp; json editing statementn <br>
-PROGRAM_END <br>
+```cpp
+#include "JSONlang.h"
+json variable definition1
+json variable definition2
+…
+PROGRAM_BEGIN
+    json variable definition3
+    …
+    json editing statement1
+    json variable definitionk
+    …
+    json editing statement2 
+    … 
+    json editing statementn 
+PROGRAM_END
+```
 
 ### Language elements
 
