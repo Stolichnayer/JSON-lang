@@ -92,6 +92,8 @@ SET json_value ASSIGN value
 Sets a value to an existing JSON variable.
 <br> The value must be of the same type of the defined variable, except if value is contained in an ARRAY or an OBJECT.
 
+#### Examples
+
 ```js
 //change 3rd day temperature from 19 to 22
 SET week_temperatures[2] ASSIGN NUMBER(22)
@@ -110,6 +112,8 @@ SET emptyObj ASSIGN OBJECT{ KEY(a) : STRING("alpha") }
 SET json_array APPEND value1, value2, …
 ```
 Adds the values of the given arguments (value1, value2, ...) to the JSON value, which must be an ARRAY.
+
+#### Examples
 
 ```js
 //appends values 23, 22, 20 to the end of the temperature array
@@ -130,6 +134,71 @@ ERASE book["author"]["age"] //removes age from author object of book
 ERASE book["type"] //removes type of book
 ERASE book //removes all book data, now book is an empty object
 ```
+### 3. Operators
+Usage of JSON values as expressions with arithmetic, logical, relational and equality operators support.
+- Arithmetic (+,-,*,/,%) and logical (>, >=, <, <=) operators can be used only between NUMBER values.
+- Special case of plus (+) operator, which can be used also between strings, arrays or objects.
+- Logical (&&, ||, !) operators can be used only between BOOLEAN values.
+- Equality operators can be used only between values of the same type.
+
+#### Examples
+
+```js
+JSON(cs352_ang) = OBJECT { KEY(exam) : NUMBER(7), KEY(project) : NUMBER(8) }
+JSON(students) = ARRAY [
+    OBJECT {
+        KEY(name) : STRING("Angela ") + STRING("Martin"),
+        KEY(id) : NUMBER(4444),
+        KEY(grades) : ARRAY [
+            OBJECT {
+                KEY(hy352) : cs352_ang["exam"] * NUMBER(0.75) + cs352_ang["project"] * NUMBER(0.25)
+            }
+        ]
+    }
+]
+```
+
+### 4. Special Functions
+```python
+SIZE_OF(json_value_or_variable)
+```
+Returns the number of the elements in an array or an object (for other values, it returns 1)
+
+```python
+IS_EMPTY(json_value_or_variable)
+```
+Checks if an array or an object is empty (for other values, it returns false)
+
+```python
+HAS_KEY(json_value_or_variable, key)
+```
+Checks if key exists in an object (for other values, it returns false)
+
+```python
+TYPE_OF(json_value_or_variable)
+```
+Returns the type of the argument as string ("string", "number", "boolean", "object", "array", "null")
+
+### 5. Print of JSON variables and values
+```python
+PRINT json_expression1, json_expression2, …
+```
+#### Examples
+
+```js
+PRINT book["title"]             //prints:Gone Girl
+PRINT book["author"]            //prints: {firstname:”Gillian”,surname:“Flynn”,age:45}
+PRINT book                      //prints: the whole json for book
+PRINT HAS_KEY(book, "author")   //prints: true                                
+PRINT STRING("Book has key author? "), HAS_KEY(book, "author") //prints: Book has key author? True
+```
+
+
+
+
+
+
+
 
 
 
