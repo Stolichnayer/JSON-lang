@@ -136,7 +136,7 @@ ERASE book //removes all book data, now book is an empty object
 ```
 ### 3. Operators
 Usage of JSON values as expressions with arithmetic, logical, relational and equality operators support.
-- Arithmetic (+,-,*,/,%) and logical (>, >=, <, <=) operators can be used only between NUMBER values.
+- Arithmetic (+, -, *, /, %) and logical (>, >=, <, <=) operators can be used only between NUMBER values.
 - Special case of plus (+) operator, which can be used also between strings, arrays or objects.
 - Logical (&&, ||, !) operators can be used only between BOOLEAN values.
 - Equality operators can be used only between values of the same type.
@@ -192,14 +192,3 @@ PRINT book                      //prints: the whole json for book
 PRINT HAS_KEY(book, "author")   //prints: true                                
 PRINT STRING("Book has key author? "), HAS_KEY(book, "author") //prints: Book has key author? True
 ```
-
-
-
-
-
-
-
-
-
-
-
