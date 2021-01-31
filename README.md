@@ -23,9 +23,9 @@ PROGRAM_END
 ```
 #### NOTE: No semicolon is used.
 
-### Language elements
+## Language elements
 
-#### Definition of JSON variable
+### 1. Definition of JSON variable
   - JSON(name) = value
 <br> Where name is the id of the defined variable.
 <br> Value can be a string, number, object, array, true, false, null
@@ -41,7 +41,48 @@ PROGRAM_END
 | object | {<br>&emsp;"title" : "C++14",<br>&emsp;"year" : 2014<br>}| OBJECT {<br>&emsp;KEY(title) : STRING("C++14"),<br>&emsp;KEY(year) : NUMBER(2014)<br>} |
 | array| [] // Empty Array<br>[<br>&emsp;2020,<br>&emsp;"CoViD",<br>&emsp;{<br>&emsp;&emsp;"country" : "Greece", <br>&emsp;&emsp;"deaths" : 5598 <br>&emsp;}<br>]| ARRAY // Empty Array<br>ARRAY [<br>&emsp;NUMBER(2020),<br>&emsp;STRING("CoViD"),<br>&emsp;OBJECT {<br>&emsp;&emsp;KEY(country) : STRING("Greece"), <br>&emsp;&emsp;KEY(deaths) : NUMBER(5598) <br>&emsp;}<br>] |
 
+#### Examples
 
+```js
+//define emptyObj json with empty object
+JSON(emptyObj) = OBJECT {}
+
+//define emptyArray json with empty array
+JSON(emptyArray) = ARRAY
+
+//define book json with an object containing data for a book
+JSON(book) = OBJECT {
+    KEY(title) : STRING("Gone Girl"),
+    KEY(published) : NUMBER(2012),
+    KEY(type) : STRING("Thriller"),
+    KEY(author) : OBJECT {
+        KEY(firstname) : STRING("GILLIAN"),
+        KEY(surname) : STRING("FLYNN"),
+        KEY(age) : NUMBER(45)
+    }
+}
+
+//define week_temperatures json with an array of numbers
+JSON(week_temperatures) = ARRAY [
+    NUMBER(20), NUMBER(19.5), NUMBER(19), NUMBER(20),
+    NUMBER(19), NUMBER(18.5), NUMBER(19)
+]
+
+//define students json with an array of objects representing students
+JSON(students) = ARRAY [
+    OBJECT {
+        KEY(name) : STRING("Kevin Malone"),
+        KEY(id) : NUMBER(4444),
+        KEY(grades) : ARRAY [
+            OBJECT { KEY(hy100) : NUMBER(9.5) },
+            OBJECT { KEY(hy150) : NUMBER(9) },
+            ...
+        ]
+    },
+    ...
+]
+
+```
 
 
 
