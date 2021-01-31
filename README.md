@@ -101,7 +101,7 @@ SET week_temperatures[2] ASSIGN NUMBER(22)
 //change 3rd day temperature from 19 to "Unknown"
 SET week_temperatures[2] ASSIGN STRING("Unknown")
 
-//add email address for 1st student
+//email field does not existin students[0], so it adds it
 SET students[0]["email"] ASSIGN STRING("kevin_m@hotmail.com")
 
 //assign new object in emptyObj json
