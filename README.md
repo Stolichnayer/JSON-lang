@@ -5,7 +5,7 @@ of data in JSON format. This language is compiled to C++ by including only the "
 header file.
 
 Language Format:
-```js
+```cpp
 #include "JSONlang.h"
 json variable definition1
 json variable definition2
